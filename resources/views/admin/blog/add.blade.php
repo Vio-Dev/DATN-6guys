@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<<<<<<< Updated upstream
     <i class="fas fa-dove "></i>
     {{-- <div class="page-body">
         <div class="container-fluid">
@@ -135,9 +134,6 @@
             }
         }
     </script> --}}
-=======
-    
->>>>>>> Stashed changes
     <div class="page-body">
         <div class="container-fluid">
             <div class="title-header">
