@@ -1,116 +1,7 @@
 @extends('layout')
 
 @section('content')
-    {{-- <section class="sec-product-detail bg-light p-5">
-        <div class="container">
-            <div class="row">
-                <!-- Cột ảnh sản phẩm -->
-                <div class="col-md-6 col-lg-7 mb-4">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            @if ($images && (is_array($images) || is_object($images)))
-                                <!-- Ảnh lớn -->
-                                <div class="text-center mb-4">
-                                    <img src="{{ asset('storage/' . $images[0]) }}" class="img-fluid rounded"
-                                        alt="{{ $product->name }}">
-                                </div>
 
-                                <!-- Ảnh nhỏ -->
-                                <div class="row">
-                                    @foreach ($images as $image)
-                                        <div class="col-4">
-                                            <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded shadow-sm"
-                                                alt="{{ $product->name }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p>Không có hình ảnh nào.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cột thông tin sản phẩm -->
-                <div class="col-md-6 col-lg-5">
-                    <div class="card border-0 shadow-sm p-4">
-                        <h2 class="card-title text-primary mb-4">{{ $product->name }}</h2>
-
-                        <!-- Giá -->
-                        <div class="mb-3">
-                            <p class="text-muted mb-1">Giá cũ:</p>
-                            <span class="text-decoration-line-through text-muted">{{ number_format($product->price) }}
-                                VND</span>
-                        </div>
-                        <div class="mb-4">
-                            <p class="text-danger fw-bold mb-1">Giá sale:</p>
-                            <span
-                                class="fs-4 text-danger">{{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }}
-                                VND</span>
-                        </div>
-
-                        <!-- Tuỳ chọn sản phẩm -->
-                        <div class="mb-4">
-                            <label for="size" class="form-label">Size</label>
-                            <select class="form-select" id="size">
-                                <option selected>Chọn kích thước</option>
-                                <option value="S">Size S</option>
-                                <option value="M">Size M</option>
-                                <option value="L">Size L</option>
-                                <option value="XL">Size XL</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label for="color" class="form-label">Màu sắc</label>
-                            <select class="form-select" id="color">
-                                <option selected>Chọn màu sắc</option>
-                                <option value="red">Đỏ</option>
-                                <option value="blue">Xanh</option>
-                                <option value="white">Trắng</option>
-                                <option value="grey">Xám</option>
-                            </select>
-                        </div>
-
-                        <!-- Số lượng và nút Thêm vào giỏ -->
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="input-group me-3" style="width: 120px;">
-                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                <input type="number" class="form-control text-center" value="1" min="1">
-                                <button class="btn btn-outline-secondary" type="button">+</button>
-                            </div>
-                            <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}"
-                                method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
-                            </form>
-                        </div>
-
-                        <!-- Ưu đãi -->
-                        <div class="advantage-box mt-4">
-                            <h5 class="text-white">Ưu Đãi Của Shop</h5>
-                            <ul class="list-unstyled mb-0">
-                                <li>✔ Giảm giá 10% cho đơn hàng đầu tiên</li>
-                                <li>✔ Miễn phí vận chuyển cho đơn hàng từ 500.000 VND</li>
-                                <li>✔ Quà tặng kèm cho khách hàng thân thiết</li>
-                                <li>✔ Hỗ trợ trả góp 0% lãi suất khi đến tận cửa hàng</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mô tả sản phẩm -->
-            <!-- Mô tả sản phẩm -->
-            <div class="mt-5 p-4 border rounded" id="product-description">
-                <h3 class="text-primary mb-3">Mô Tả Sản Phẩm</h3>
-                <p id="description-text" class="text-truncate">{!! nl2br(e($product->content)) !!}</p>
-                <button id="read-more-btn" class="btn btn-link text-primary">Xem thêm</button>
-            </div>
-
-        </div>
-        <!-- Mô tả sản phẩm -->
-
-    </section> --}}
 
     <section class="sec-product-detail bg0 p-t-65 p-b-60">
         <div class="container">
@@ -148,88 +39,61 @@
 
                 <div class="col-md-6 col-lg-5 p-b-30">
                     <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        @if ($product->sale)
+                            <span class="sale-badge position-absolute top-0 start-0 bg-danger text-white p-1">Sale</span>
+                        @endif
+                        <!-- Tên sản phẩm -->
                         <h4 class="mtext-105 cl2 js-name-detail p-b-14">
                             {{ $product->name }}
                         </h4>
+                
+                        <!-- Hiển thị giá cũ và giá mới nếu sản phẩm đang sale -->
+                        @if ($product->sale)
+                            <!-- Giá cũ bị gạch ngang -->
+                            <!-- Giá cũ bị gạch ngang -->
+                            <span class="mtext-106 cl2 text-muted" style="text-decoration: line-through;">
+                                Giá: {{ number_format($product->price) }} VNĐ
+                            </span>
 
-                        <span class="mtext-106 cl2">
-                            Giá:{{ number_format($product->price) }}VNĐ
-                        </span>
-                        <br>
-
-                        <span class="mtext-106 cl2" style="color: #FF0000; font-size: 1.2em;  ">
-                            Giá sale:
-                            {{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }} VND
-                        </span>
-
-
-                        <p class="stext-102 cl3 p-t-23">
-                            Màn hình Asus TUF GAMING VG249Q3A 24" Fast IPS 180Hz Gsync chuyên game.
-                        </p>
-
+                            <br>
+                            <!-- Giá mới sau giảm -->
+                            <span class="mtext-106 cl2" style="color: #FF0000; font-size: 1.2em;">
+                                Giá sale: {{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }} VNĐ
+                            </span>
+                        @else
+                            <!-- Hiển thị giá bình thường nếu không có giảm giá -->
+                            <span class="mtext-106 cl2">
+                                Giá: {{ number_format($product->price) }} VNĐ
+                            </span>
+                        @endif
+                
+                        <p class="stext-102 cl3 p-t-23"></p>
+                
                         <!--  -->
                         <div class="p-t-33">
-                            <div class="flex-w flex-r-m p-b-10">
-                                {{-- <div class="size-203 flex-c-m respon6">
-                                    Size
-                                </div>
-
-                                <div class="size-204 respon6-next">
-                                    <div class="rs1-select2 bor8 bg0">
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
-                                            <option>Size S</option>
-                                            <option>Size M</option>
-                                            <option>Size L</option>
-                                            <option>Size XL</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
-                                </div> --}}
-                            </div>
-
-                            {{-- <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">
-                                    Color
-                                </div>
-
-                                <div class="size-204 respon6-next">
-                                    <div class="rs1-select2 bor8 bg0">
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
-                                            <option>Red</option>
-                                            <option>Blue</option>
-                                            <option>White</option>
-                                            <option>Grey</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
-                                </div> --}}
-                            </div>
-
                             <div class="flex-w flex-r-m p-b-10">
                                 <div class="size-204 flex-w flex-m respon6-next">
                                     <div class="wrap-num-product flex-w m-r-20 m-tb-10">
                                         <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                             <i class="fs-16 zmdi zmdi-minus"></i>
                                         </div>
-                            
+                
                                         <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-                            
+                
                                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                             <i class="fs-16 zmdi zmdi-plus"></i>
                                         </div>
                                     </div>
-                            
-                                    <!-- Form to Add to Cart -->
+                
+                                    <!-- Form để thêm vào giỏ hàng -->
                                     <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
                                             Thêm vào giỏ hàng
                                         </button>
                                     </form>
-                            
-                                    <!-- Form to Add to Wishlist -->
+                
+                                    <!-- Form để thêm vào yêu thích -->
                                     <form action="{{ route('wishlist.store', ['productId' => $product->id]) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" style="margin-top: 10px;">
@@ -238,31 +102,25 @@
                                     </form>
                                 </div>
                             </div>
-                            
                         </div>
-
-                        <!--  -->
+                
+                        <!-- Social Share -->
                         <div class="flex-w flex-m p-l-100 p-t-40 respon7">
                             <div class="flex-m bor9 p-r-10 m-r-11">
-                                <a href="#"
-                                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                    data-tooltip="Add to Wishlist">
+                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
                                     <i class="zmdi zmdi-favorite"></i>
                                 </a>
                             </div>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Facebook">
+                
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
                                 <i class="fa fa-facebook"></i>
                             </a>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Twitter">
+                
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
                                 <i class="fa fa-twitter"></i>
                             </a>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Google Plus">
+                
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
                                 <i class="fa fa-google-plus"></i>
                             </a>
                         </div>
@@ -270,116 +128,7 @@
                 </div>
             </div>
 
-            {{-- <div class="bor10 m-t-50 p-t-43 p-b-40">
-                <!-- Tab01 -->
-                <div class="tab01">
-                    <!-- Nav tabs -->
-                    <!-- Tab panes -->
-                    <div class="tab-content p-t-43">
-                        <!-- - -->
-                        <div class="tab-pane fade show active" id="product-description" role="tabpanel">
-                            <div class="how-pos2 p-lr-15-md">
-                                <p class="stext-102 cl6" id="description-text">
-                                    {!! nl2br(e($product->content)) !!}
-                                </p>
-                                <button id="read-more-btn" class="btn btn-link text-primary">Xem thêm</button>
-                            </div>
-                        </div>
-                        <!-- - -->
-                    </div>
-                </div>
-            </div>
-            <div class="bor10 m-t-50 p-t-43 p-b-40">
-                <div class="tab01">
-                    <div class="tab-content p-t-43">
-                        <div class="tab-pane fade show active" id="description" role="tabpanel">
-                            <div class="row">
-                                <div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
-                                    <div class="p-b-30 m-lr-15-sm">
-                                        <!-- Review -->
-                                        <div class="flex-w flex-t p-b-68">
-                                            <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                <img src="images/avatar-01.jpg" alt="AVATAR">
-                                            </div>
-
-                                            <div class="size-207">
-                                                <div class="flex-w flex-sb-m p-b-17">
-                                                    <span class="mtext-107 cl2 p-r-20">
-                                                        Ariana Grande
-                                                    </span>
-
-                                                    <span class="fs-18 cl11">
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star-half"></i>
-                                                    </span>
-                                                </div>
-
-                                                <p class="stext-102 cl6">
-                                                    Quod autem in homine praestantissimum atque optimum est, id deseruit.
-                                                    Apud ceteros autem philosophos
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Add review -->
-                                        <form class="w-full">
-                                            <h5 class="mtext-108 cl2 p-b-7">
-                                                Add a review
-                                            </h5>
-
-                                            <p class="stext-102 cl6">
-                                                Your email address will not be published. Required fields are marked *
-                                            </p>
-
-                                            <div class="flex-w flex-m p-t-50 p-b-23">
-                                                <span class="stext-102 cl3 m-r-16">
-                                                    Your Rating
-                                                </span>
-
-                                                <span class="wrap-rating fs-18 cl11 pointer">
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <input class="dis-none" type="number" name="rating">
-                                                </span>
-                                            </div>
-
-                                            <div class="row p-b-25">
-                                                <div class="col-12 p-b-5">
-                                                    <label class="stext-102 cl3" for="review">Your review</label>
-                                                    <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="name">Name</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name"
-                                                        type="text" name="name">
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="email">Email</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email"
-                                                        type="text" name="email">
-                                                </div>
-                                            </div>
-
-                                            <button
-                                                class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+            
             <div class="bor10 m-t-50 p-t-43 p-b-40">
                 <!-- Tab01 -->
                 <div class="tab01">
@@ -530,7 +279,7 @@
         <section class="sec-product bg0 p-t-100 p-b-50">
             <div class="p-b-32">
 				<h3 class="ltext-105 cl5 txt-center respon1">
-					Sản khác
+					Sản phẩm khác
 				</h3>
 			</div>
             <div class="container">
@@ -599,7 +348,6 @@
                                                                     VND
                                                                 </span>
                                                                 <span class="stext-105 cl3 text-danger fw-bold">
-                                                                    {{ number_format($relatedProduct->price - $$relatedProduct->price * ($relatedProduct->sale_percentage / 100), 0, ',', '.') }}
                                                                     VND
                                                                 </span>
                                                             @else

@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
+<<<<<<< Updated upstream
     <i class="fas fa-dove "></i>
     {{-- <div class="page-body">
         <div class="container-fluid">
@@ -134,6 +135,9 @@
             }
         }
     </script> --}}
+=======
+    
+>>>>>>> Stashed changes
     <div class="page-body">
         <div class="container-fluid">
             <div class="title-header">
@@ -191,8 +195,12 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Bìa</label>
                                             <div class="col-sm-10">
+<<<<<<< Updated upstream
                                                 <input class="form-control" type="file" name="cover_image"
                                                     accept="image/*" onchange="previewCoverImage()">
+=======
+                                                <input class="form-control" type="file" name="featured_image" accept="image/*" onchange="previewCoverImage()">
+>>>>>>> Stashed changes
                                             </div>
                                         </div>
 
@@ -208,11 +216,18 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Trong Bài Viết</label>
                                             <div class="col-sm-10">
+<<<<<<< Updated upstream
                                                 <input class="form-control form-choose" type="file" name="images[]"
                                                     multiple accept="image/*" onchange="previewPostImages()">
                                             </div>
                                         </div>
 
+=======
+                                                <input class="form-control form-choose" type="file" name="image_in_content" accept="image/*" onchange="previewPostImages()">
+                                            </div>
+                                        </div>
+                                            
+>>>>>>> Stashed changes
                                         <!-- Xem Trước Ảnh Trong Bài Viết -->
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Xem Trước Hình Ảnh</label>

@@ -23,6 +23,7 @@ class ProductController extends Controller
     public function index()
     {
         $product = Product::all();
+        // $product = Product::orderBy('id', 'desc')->get(); // dòng này không được xóa 
         return view('admin.products.index', compact('product'));
     }
     public function add()
@@ -103,7 +104,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100' ,
             'price' => 'required|numeric',
             'content' => 'required|string',
             'quantity' => 'required|integer|min:1',
