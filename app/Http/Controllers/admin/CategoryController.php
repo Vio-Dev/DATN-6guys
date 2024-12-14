@@ -15,6 +15,7 @@ class CategoryController extends Controller
     public function category()
     {
         $category = Category::all();
+        // $category = Category::orderBy('created_at', 'desc')->get(); // dòng này không được xóa 
         return view('admin.categories.index', compact('category'));
     }
 

@@ -224,7 +224,7 @@
                      </h4>
 
                      <p class="stext-107 cl7 size-201">
-                         Có thắc mắc gì không? Hãy liên hệ cho chúng tôi theo số (+84) 96 716 6879.
+                         Có thắc mắc gì không? Hãy liên hệ cho chúng tôi theo số (+1) 96 716 6879.
                      </p>
 
                      <div class="p-t-27">
@@ -250,7 +250,7 @@
                      <form>
                          <div class="wrap-input1 w-full p-b-4">
                              <input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email"
-                                 placeholder="sixguy@gmail.com">
+                                 placeholder="email@example.com">
                              <div class="focus-input1 trans-04"></div>
                          </div>
 

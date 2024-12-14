@@ -23,61 +23,58 @@ class CouponController extends Controller
 
     // Lưu mã giảm giá mới vào cơ sở dữ liệu
     public function store(Request $request)
-    {
-        $request->validate([
-            'code' => 'required|string|max:50|unique:coupons,code',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'usage_limit' => 'required|integer|min:1',
-            'minimum_order_value' => 'required|numeric|min:0',
-            'discount_value' => 'required|numeric|min:0',
-        ]);
+{
+    $request->validate([
+        'code' => 'required|string|max:50|unique:coupons,code',
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date',  // Quy tắc custom
+        'usage_limit' => 'required|integer|min:1',
+        'minimum_order_value' => 'required|numeric|min:0',
+        'discount_value' => 'required|numeric|min:0',
+    ]);
 
-        // Tạo mã giảm giá mới
-        Coupon::create([
-            'code' => $request->code,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'usage_limit' => $request->usage_limit,
-            'minimum_order_value' => $request->minimum_order_value,
-            'discount_value' => $request->discount_value,
-        ]);
+    // Lưu mã giảm giá
+    Coupon::create([
+        'code' => $request->code,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'usage_limit' => $request->usage_limit,
+        'minimum_order_value' => $request->minimum_order_value,
+        'discount_value' => $request->discount_value,
+    ]);
 
-        return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được tạo.');
-    }
+    return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được tạo.');
+}
 
-    // Hiển thị form chỉnh sửa mã giảm giá
-    public function edit($id)
-    {
-        $coupon = Coupon::findOrFail($id);  // Tìm mã giảm giá theo ID
-        return view('admin.coupons.edit', compact('coupon')); // Trả về form chỉnh sửa mã giảm giá
-    }
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'code' => 'required|string|max:50|unique:coupons,code,' . $id,
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date',  // Validates that end_date >= start_date
+        'usage_limit' => 'required|integer|min:1',
+        'minimum_order_value' => 'required|numeric|min:0',
+        'discount_value' => 'required|numeric|min:0',
+    ]);
 
-    // Cập nhật mã giảm giá
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'code' => 'required|string|max:50|unique:coupons,code,' . $id,
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'usage_limit' => 'required|integer|min:1',
-            'minimum_order_value' => 'required|numeric|min:0',
-            'discount_value' => 'required|numeric|min:0',
-        ]);
+    $coupon = Coupon::findOrFail($id);
+    $coupon->update([
+        'code' => $request->code,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'usage_limit' => $request->usage_limit,
+        'minimum_order_value' => $request->minimum_order_value,
+        'discount_value' => $request->discount_value,
+    ]);
 
-        $coupon = Coupon::findOrFail($id);
-        $coupon->update([
-            'code' => $request->code,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'usage_limit' => $request->usage_limit,
-            'minimum_order_value' => $request->minimum_order_value,
-            'discount_value' => $request->discount_value,
-        ]);
-
-        return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được cập nhật.');
-    }
-
+    return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được cập nhật.');
+}
+ // Hiển thị form chỉnh sửa mã giảm giá
+ public function edit($id)
+ {
+     $coupon = Coupon::findOrFail($id);  // Tìm mã giảm giá theo ID
+     return view('admin.coupons.edit', compact('coupon')); // Trả về form chỉnh sửa mã giảm giá
+ }
     // Xóa mã giảm giá
     public function destroy($id)
     {
