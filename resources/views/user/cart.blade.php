@@ -12,75 +12,7 @@
         {{ session('success') }}
     </div>
 @endif
-{{-- <div class="container my-5">
-    <h2 class="text-center mb-4">Giỏ hàng của bạn</h2>
-    @if(session('cart') && count(session('cart')) > 0)
-        <div class="row">
-            @foreach(session('cart') as $item) <!-- Loop through the cart items -->
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-sm">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                @if(isset($item['image']))
-                                    @php
-                                        $images = json_decode($item['image'], true);
-                                    @endphp
-                                    @if(is_array($images) && count($images) > 0)
-                                        <img src="{{ asset('storage/' . $images[0]) }}" alt="{{ $item['name'] }}" class="img-fluid rounded-start" style="height: 200px; object-fit: cover;">
-                                    @else
-                                        <img src="{{ asset('path/to/default-image.jpg') }}" alt="Ảnh không có" class="img-fluid rounded-start" style="height: 200px; object-fit: cover;">
-                                    @endif
-                                @else
-                                    <img src="{{ asset('path/to/default-image.jpg') }}" alt="Ảnh không có" class="img-fluid rounded-start" style="height: 200px; object-fit: cover;">
-                                @endif
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title product-name">{{ $item['name'] }}</h5>
-                                    <p class="card-text">Giá: <strong>{{ number_format($item['price'], 0, ',', '.') }} VNĐ</strong></p>
-                                    <p class="card-text">Số lượng: 
-                                        <form action="{{ route('cart.update', $item['id']) }}" method="POST" class="d-inline-flex">
-                                            @csrf
-                                            @method('POST') <!-- Or use PUT if that's your preferred method -->
-                                            <input type="number" name="quantity" value="{{ $item['quantity'] }}" class="form-control w-25 me-2" required min="1">
-                                            <button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
-                                        </form>
-                                    </p>
-                                    <p class="card-text">Tổng: <strong>{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }} VNĐ</strong></p>
-                                    <form action="{{ route('cart.remove', $item['id']) }}" method="POST" class="d-flex justify-content-end">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-        <div class="my-4">
-            <h4>Tổng giá trị: 
-                <span class="fw-bold text-danger">
-                    {{ number_format(array_sum(array_map(function($item) {
-                        return $item['price'] * $item['quantity'];
-                    }, session('cart'))), 0, ',', '.') }} VNĐ
-                </span>
-            </h4>
-        </div>
 
-        <div class="d-flex justify-content-start">
-            <form action="{{ route('user.checkout.confirm') }}" method="GET">
-                @csrf
-                <button type="submit" class="btn btn-success">Xác nhận thanh toán</button>
-            </form>
-        </div>
-    @else
-        <div class="alert alert-info text-center">
-            Giỏ hàng của bạn đang trống.
-        </div>
-    @endif
-</div> --}}
 <div class="container my-5">
     <h2 class="text-center mb-4">Giỏ hàng của bạn</h2>
     @if(session('cart') && count(session('cart')) > 0)
@@ -100,6 +32,15 @@
                 <tbody>
                     @php $index = 1; @endphp
                     @foreach(session('cart') as $item)
+                        @php
+                            $product = App\Models\admin\Product::find($item['id']);  // Lấy sản phẩm theo ID
+                            $price = $product->price;
+                            // Kiểm tra xem sản phẩm có đang giảm giá không
+                            if ($product && $product->sale) {
+                                // Nếu có, tính giá sau khi giảm
+                                $price = $product->price - $product->price * ($product->sale_percentage / 100);
+                            }
+                        @endphp
                         <tr>
                             <!-- Số thứ tự -->
                             <td class="text-center">{{ $index++ }}</td>
@@ -122,9 +63,24 @@
                             
                             <!-- Tên sản phẩm -->
                             <td>{{ $item['name'] }}</td>
-
+                            <td>
                             <!-- Giá -->
-                            <td class="text-center">{{ number_format($item['price'], 0, ',', '.') }} VNĐ</td>
+                            @if ($product && $product->sale)
+                            <!-- Giá cũ bị gạch ngang -->
+                            
+                            <br>
+                            <!-- Giá mới sau giảm -->
+                            <span class="mtext-106 cl2" style="color: #FF0000; font-size: 1.2em;">
+                                 {{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }} VNĐ
+                            </span>
+                            @else
+                            <!-- Hiển thị giá bình thường nếu không có giảm giá -->
+                            <span class="mtext-106 cl2">
+                                {{ number_format($product->price) }} VNĐ
+                            </span>
+                            @endif
+                        </td>
+                        
                             
                             <!-- Số lượng -->
                             <td class="text-center">
@@ -137,7 +93,9 @@
                             </td>
 
                             <!-- Tổng -->
-                            <td class="text-center">{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }} VNĐ</td>
+                            <td class="text-center">
+                                {{ number_format($price * $item['quantity'], 0, ',', '.') }} VNĐ
+                            </td>
                             
                             <!-- Hành động -->
                             <td class="text-center">
@@ -157,7 +115,15 @@
             <h4>Tổng giá trị: 
                 <span class="fw-bold text-danger">
                     {{ number_format(array_sum(array_map(function($item) {
-                        return $item['price'] * $item['quantity'];
+                        $product = App\Models\admin\Product::find($item['id']);
+                        $price = $product->price;
+                        
+                        // Kiểm tra giảm giá
+                        if ($product && $product->sale) {
+                            $price = $product->price - $product->price * ($product->sale_percentage / 100);
+                        }
+        
+                        return $price * $item['quantity'];
                     }, session('cart'))), 0, ',', '.') }} VNĐ
                 </span>
             </h4>
