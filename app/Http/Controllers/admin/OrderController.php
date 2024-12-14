@@ -57,4 +57,21 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Đơn hàng đã được xóa thành công.');
     }
+    public function cancelOrder(Request $request, $id)
+{
+    $order = Order::where('id', $id)->where('user_id', Auth::id())->first();
+
+    if (!$order) {
+        return redirect()->back()->with('error', 'Đơn hàng không tồn tại hoặc bạn không có quyền hủy đơn hàng này.');
+    }
+
+    if ($order->status !== 'pending') {
+        return redirect()->back()->with('error', 'Đơn hàng đã được xác nhận và không thể hủy.');
+    }
+
+    $order->status = 'canceled';
+    $order->save();
+
+    return redirect()->route('user.orders')->with('success', 'Đơn hàng đã được hủy thành công.');
+}
 }

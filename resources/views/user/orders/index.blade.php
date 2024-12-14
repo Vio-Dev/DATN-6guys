@@ -1,58 +1,6 @@
 @extends('layout')
 @section('content')
 
-{{-- <section class="bg0 p-t-104 p-b-116">
-    <div class="container">
-        <h2>Danh sách đơn hàng của bạn</h2>
-        
-        @if ($orders->isEmpty())
-            <p>Bạn chưa có đơn hàng nào.</p>
-        @else
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID Đơn hàng</th>
-                        <th>Ngày đặt hàng</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $order)
-                        <tr>
-                            <td>{{ $order->id }}</td>
-                            <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                            <td>{{ number_format($order->total_price, 0, ',', '.') }} VND</td>
-                            <td>
-                                @switch($order->status)
-                                    @case('pending')
-                                        Chờ xác nhận
-                                        @break
-                                    @case('confirmed')
-                                        Đã xác nhận
-                                        @break
-                                    @case('shipping')
-                                        Đang giao hàng
-                                        @break
-                                    @case('delivered')
-                                        Đã giao thành công
-                                        @break
-                                    @case('canceled')
-                                        Đã hủy
-                                        @break
-                                    @default
-                                        Không xác định
-                                @endswitch
-                            </td>
-                            <td><a href="{{ route('user.orders.show', $order->id) }}" class="btn btn-info">Xem chi tiết</a></td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
-</section> --}}
 <section class="bg0 p-t-104 p-b-116">
     <div class="container">
         <h2 class="text-center mb-4">Danh sách đơn hàng của bạn</h2>
@@ -71,7 +19,7 @@
                             <th>Ngày đặt hàng</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
-                            <th>Chi tiết</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,11 +64,21 @@
                                     @endswitch
                                 </td>
 
-                                <!-- Nút Chi tiết -->
+                                <!-- Hành động -->
                                 <td>
-                                    <a href="{{ route('user.orders.show', $order->id) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('user.orders.show', $order->id) }}" class="btn btn-info btn-sm mb-1">
                                         Xem chi tiết
                                     </a>
+                                    @if ($order->status === 'pending')
+                                        <form action="{{ route('user.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Hủy đơn hàng
+                                            </button>
+                                        </form>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" disabled>Không thể hủy</button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

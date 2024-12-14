@@ -1,122 +1,6 @@
 @extends('layout')
 @section('content')
-    {{-- <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    {{-- <body>
-        <div class="container my-5">
-            <div class="row">
-                <!-- Sidebar Menu -->
-                <div class="col-md-3">
-                    <div class="list-group">
-                        <a href="#profile" class="list-group-item list-group-item-action active" data-bs-toggle="list">
-                            Thông tin hồ sơ
-                        </a>
-                        <a href="#orders" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                            Đơn hàng
-                        </a>
-                        <a href="#settings" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                            Cài đặt
-                        </a>
-                        <a href="#logout" class="list-group-item list-group-item-action">
-                            Đăng xuất
-                        </a>
-                    </div>
-                </div>
     
-                <!-- Main Content -->
-                <div class="col-md-9">
-                    <div class="tab-content">
-                        <!-- Profile Tab -->
-                        <div class="tab-pane fade show active" id="profile">
-                            <h3>Thông tin hồ sơ</h3>
-                            <form>
-                                <div class="mb-3">
-                                    <label for="fullName" class="form-label">Họ và tên</label>
-                                    <input type="text" class="form-control" id="fullName" placeholder="Nhập họ và tên">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Nhập email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="phone" class="form-label">Số điện thoại</label>
-                                    <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            </form>
-                        </div>
-    
-                        <!-- Orders Tab -->
-                        <div class="tab-pane fade" id="orders">
-                            <h3>Đơn hàng</h3>
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Ngày đặt</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thành tiền</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>DH001</td>
-                                        <td>2024-11-17</td>
-                                        <td>Đã giao</td>
-                                        <td>1,000,000đ</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>DH002</td>
-                                        <td>2024-11-15</td>
-                                        <td>Đang xử lý</td>
-                                        <td>500,000đ</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-    
-                        <!-- Settings Tab -->
-                        <div class="tab-pane fade" id="settings">
-                            <h3>Cài đặt</h3>
-                            <p>Phần này chứa các tùy chọn cài đặt tài khoản.</p>
-                        </div>
-    
-                        <!-- Logout Tab -->
-                        <div class="tab-pane fade" id="logout">
-                            <h3>Đăng xuất</h3>
-                            <p>Bạn có chắc chắn muốn đăng xuất không?</p>
-                            <button class="btn btn-danger">Đăng xuất</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body> --}}
     <body>
         <div class="container my-5">
             <div class="row">
@@ -152,10 +36,30 @@
                         <!-- Profile Update Tab -->
                         <div class="tab-pane fade show active" id="profile">
                             <h3>Thông tin hồ sơ</h3>
-                            <form method="post" action="{{ route('profile.update') }}">
+                            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method('patch')
+                                @method('put')
+                        
+                                <!-- Avatar Upload -->
+                                <!-- Avatar Upload -->
+                            <div class="mb-3 ">
+                                @if ($user->avatar)
+                                    <div class="mt-3">
+                                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
+                                    </div>
+                                @else
+                                    <p class="mt-3 text-muted">Chưa có ảnh đại diện.</p>
+                                @endif
 
+                                <!-- Avatar Upload Form -->
+                                <label for="avatar" class="form-label">Ảnh đại diện</label>
+                                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                                @error('avatar')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        
+                                <!-- Full Name -->
                                 <div class="mb-3">
                                     <label for="fullName" class="form-label">Họ và tên</label>
                                     <input type="text" class="form-control" id="fullName" name="name"
@@ -164,7 +68,8 @@
                                         <div class="text-danger mt-2">{{ $message }}</div>
                                     @enderror
                                 </div>
-
+                        
+                                <!-- Email -->
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email"
@@ -173,16 +78,22 @@
                                         <div class="text-danger mt-2">{{ $message }}</div>
                                     @enderror
                                 </div>
-
+                        
+                                <!-- Phone Number -->
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Số điện thoại</label>
                                     <input type="tel" class="form-control" id="phone" name="phone"
                                         value="{{ old('phone', $user->phone ?? '') }}" placeholder="Nhập số điện thoại">
+                                    @error('phone')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                    @enderror
                                 </div>
-
+                        
+                                <!-- Submit Button -->
                                 <button type="submit" class="btn btn-primary">Cập nhật</button>
                             </form>
                         </div>
+                        
                         <!-- Orders Tab -->
                         <div class="tab-pane fade" id="orders">
                             <h3>Đơn hàng</h3>
