@@ -227,7 +227,7 @@
                                                         
                                                         <!-- Nhãn Hết hàng -->
                                                         @if ($item->quantity == 0)
-                                                        <span class="stext-105 cl3 text-muted text-decoration-line-through">Hết hàng</span>
+                                                        <span class="stext-105 cl3 fw-bold text-danger">Hết hàng</span>
                                                         @endif
                                                 
                                                         @if ($item->sale_percentage)
