@@ -53,10 +53,10 @@ Route::get('/about', function () {
 Route::get('/', function () {
     return view('index');
 })->middleware(['auth', 'verified'])->name('index');
-
+Route::match(['put', 'patch'], '/admin/user/update/{id}', [usersCcontroller::class, 'update'])->name('profile.update');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 require __DIR__ . '/auth.php';
@@ -133,9 +133,10 @@ Route::get('/oders/list', [OrderController::class, 'list'])->name('admin.oders.l
 Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders');
+
 Route::get('/user/orders/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders.index');
-
+Route::post('/user/orders/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('user.orders.cancel');
 // Route::get('/', function () {
 //     return view('index');
 // });

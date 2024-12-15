@@ -3,31 +3,60 @@
 @section('content')
     <h1>Tạo mã giảm giá mới</h1>
 
+    <!-- Hiển thị lỗi nếu có -->
+    @if ($errors->any())
+        <div style="color: red; padding-bottom: 20px;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('admin.coupons.store') }}" method="POST">
         @csrf
         <div>
             <label for="code">Mã giảm giá</label>
             <input type="text" id="code" name="code" required>
+            @error('code')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="start_date">Ngày bắt đầu</label>
             <input type="date" id="start_date" name="start_date" required>
+            @error('start_date')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="end_date">Ngày kết thúc</label>
             <input type="date" id="end_date" name="end_date" required>
+            @error('end_date')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="usage_limit">Số lần sử dụng</label>
             <input type="number" id="usage_limit" name="usage_limit" required>
+            @error('usage_limit')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="minimum_order_value">Giá trị đơn hàng tối thiểu</label>
             <input type="number" id="minimum_order_value" name="minimum_order_value" required>
+            @error('minimum_order_value')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="discount_value">Giảm giá (VND)</label>
             <input type="number" id="discount_value" name="discount_value" required>
+            @error('discount_value')
+                <div class="error">{{ $message }}</div>
+            @enderror
         </div>
         <button type="submit">Tạo mã giảm giá</button>
     </form>

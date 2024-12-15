@@ -16,18 +16,22 @@ class HomeController extends Controller
     {
         // Lấy tất cả sản phẩm
         $products = Product::take(12)->get();
+        // $products = Product::orderBy('id', 'desc')->take(12)->get(); dòng này không được xóa nhé
 
         // Lấy tất cả danh mục
         $categories = Category::take(4)->get();
 
+        // Lấy 5 bài viết mới nhất
+        $posts = Post::latest()->take(5)->get(); 
         // Lấy sản phẩm theo từng danh mục
+
         $productsByCategory = [];
         foreach ($categories as $category) {
             $productsByCategory[$category->id] = Product::where('category_id', $category->id)->get();
         }
 
         // Trả về view với cả sản phẩm và sản phẩm theo danh mục
-        return view('index', compact('products', 'categories', 'productsByCategory'));
+        return view('index', compact('products', 'categories', 'productsByCategory','posts'));
     }
     public function showAll()
     {
