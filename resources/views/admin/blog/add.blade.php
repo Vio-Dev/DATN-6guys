@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 {"hello"}
 @section('content')
+
     <div class="page-body">
         <div class="container-fluid">
             <div class="title-header">

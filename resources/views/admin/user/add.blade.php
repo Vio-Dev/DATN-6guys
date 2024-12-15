@@ -18,7 +18,6 @@
                                             <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
                                                 data-bs-target="#pills-home" type="button">Quản Trị Viên</button>
                                         </li>
-
                                     </ul>
 
                                     <div class="tab-content" id="pills-tabContent">
@@ -32,44 +31,73 @@
                                                 </div>
 
                                                 <div class="row">
+                                                    <!-- Tên Người Dùng -->
                                                     <div class="mb-4 row align-items-center">
                                                         <label class="form-label-title col-lg-2 col-md-3 mb-0">
                                                             Tên Người Dùng</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="text" name="name">
+                                                            <input class="form-control @error('name') is-invalid @enderror" 
+                                                                type="text" name="name" value="{{ old('name') }}">
+                                                            @error('name')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
+                                                    <!-- Email Người Dùng -->
                                                     <div class="mb-4 row align-items-center">
-                                                        <label
-                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">
                                                            Email Người Dùng</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="email" name="email">
+                                                            <input class="form-control @error('email') is-invalid @enderror" 
+                                                                type="email" name="email" value="{{ old('email') }}">
+                                                            @error('email')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
+                                                    <!-- Mật Khẩu -->
                                                     <div class="mb-4 row align-items-center">
-                                                        <label
-                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">Mật Khẩu</label>
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mật Khẩu</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="password" name="password">
+                                                            <input class="form-control @error('password') is-invalid @enderror" 
+                                                                type="password" name="password">
+                                                            @error('password')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
                                                     </div>
+
+                                                    <!-- Xác Nhận Mật Khẩu -->
+                                                    <div class="mb-4 row align-items-center">
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Xác Nhận Mật Khẩu</label>
+                                                        <div class="col-md-9 col-lg-10">
+                                                            <input class="form-control @error('password_confirmation') is-invalid @enderror" 
+                                                                type="password" name="password_confirmation">
+                                                            @error('password_confirmation')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Vị Trí -->
                                                     <div class="col-md-9 col-lg-10">
                                                         <div class="form-group">
                                                             <label>Vị Trí</label>
                                                             <select class="form-select" name="role">
-                                                                <option>Người Dùng</option>
-                                                                <option>Quản Trị Viên</option>
+                                                                <option value="user">Người Dùng</option>
+                                                                <option value="admin">Quản Trị Viên</option>
                                                             </select>
                                                         </div>
+                                                    </div>
 
-                                                        <input type="submit" value="Lưu">
+                                                    <!-- Nút Lưu -->
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <input type="submit" value="Lưu" class="btn btn-primary">
                                                     </div>
                                             </form>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

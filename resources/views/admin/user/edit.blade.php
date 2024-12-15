@@ -42,8 +42,7 @@
                                                     </div>
 
                                                     <div class="mb-4 row align-items-center">
-                                                        <label
-                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">
                                                             Email Người Dùng</label>
                                                         <div class="col-md-9 col-lg-10">
                                                             <input class="form-control" type="email" name="email"
@@ -52,20 +51,20 @@
                                                     </div>
 
                                                     <div class="mb-4 row align-items-center">
-                                                        <label
-                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">Mật Khẩu</label>
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mật Khẩu</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="password" name="password"
-                                                                value={{ $user->password }}>
+                                                            <!-- Input mật khẩu, không hiển thị giá trị cũ, chỉ placeholder nếu muốn thay đổi -->
+                                                            <input class="form-control" type="password" name="password" placeholder="Nhập mật khẩu mới (nếu muốn thay đổi)">
                                                         </div>
                                                     </div>
+                                                    
                                                     <div class="col-md-9 col-lg-10">
                                                         <div class="form-group">
                                                             <label>Vị Trí</label>
                                                             <select class="form-select" name="role"
                                                                 value={{ $user->name }}>
-                                                                <option>Người Dùng</option>
-                                                                <option>Quản Trị Viên</option>
+                                                                <option value="user">Người Dùng</option>
+                                                                <option value="admin">Quản Trị Viên</option>
                                                             </select>
                                                         </div>
 
@@ -90,7 +89,7 @@
             <footer class="footer">
                 <div class="row">
                     <div class="col-md-12 footer-copyright text-center">
-                        <p class="mb-0">Copyright 2021 © Voxo theme by pixelstrap</p>
+                        <p class="mb-0">Copyright 2024 sixguy</p>
                     </div>
                 </div>
             </footer>
