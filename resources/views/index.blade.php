@@ -298,7 +298,14 @@
             </div>
         @endforeach
     </div>
+    
+    <!-- Nút xem thêm -->
+    <div class="text-center mb-4">
+        <a href="{{ route('products.index') }}" class="btn btn-primary">Xem thêm sản phẩm</a>
+    </div>
 </div>
+
+
 <!-- Products End -->
 
     <section class="sec-blog bg0 p-t-60 p-b-90">

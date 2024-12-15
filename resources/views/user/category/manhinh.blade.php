@@ -88,27 +88,54 @@
                         </div>
                     </div>
                 @endforeach
-                    <div class="col-12 pb-1">
-                        <nav aria-label="Page navigation">
-                          <ul class="pagination justify-content-center mb-3">
-                            <li class="page-item disabled">
-                              <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </nav>
-                    </div>
+                <div class="col-12 pb-1">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-3">
+                
+                            <!-- Nút Previous -->
+                            @if ($products->currentPage() == 1)
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            @endif
+                
+                            <!-- Số trang logic -->
+                            @for ($i = 1; $i <= $products->lastPage(); $i++)
+                                <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                                </li>
+                            @endfor
+                
+                            <!-- Nút Next -->
+                            @if ($products->currentPage() == $products->lastPage())
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            @endif
+                
+                        </ul>
+                    </nav>
+                </div>
                 </div>
             </div>
         </div>
