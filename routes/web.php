@@ -19,11 +19,12 @@ use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\WishlistController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/{productId}', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 });
+
 
 Route::prefix('admin')->group(function () {
     Route::get('/posts', [PostController::class, 'index'])->name('admin.blog.index'); // Hiển thị danh sách bài viết
