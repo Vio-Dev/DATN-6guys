@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Controllers\Admin\CouponController;
-
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\WishlistController;
 
@@ -77,6 +77,7 @@ Route::get('/admin/addproducts', [ProductController::class, 'add'])->name('admin
 // Route::get('/admin/product/addproduct', [ProductController::class, 'add'])->name('admin.products.add');
 Route::post('/admin/products/store', [ProductController::class, 'store'])->name('admin.products.store');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductController::class, 'showAll'])->name('products.index');
 // routes/web.php
 
 
@@ -133,7 +134,8 @@ Route::get('/oders/list', [OrderController::class, 'list'])->name('admin.oders.l
 Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders');
-
+Route::get('/user/orders/{order}/return', [OrderController::class, 'showReturnForm'])->name('user.orders.return');
+Route::post('/user/orders/{order}/return', [OrderController::class, 'processReturn'])->name('user.orders.processReturn');
 Route::get('/user/orders/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders.index');
 Route::post('/user/orders/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('user.orders.cancel');
@@ -178,6 +180,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         'destroy' => 'admin.coupons.destroy',
     ]);
 });
+
+
+// Route hiển thị thông báo đổi trả
+Route::get('/notifications', [NotificationController::class, 'showReturnNotifications'])->name('notifications.index');
 
 
 
