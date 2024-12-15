@@ -1,6 +1,5 @@
 @extends('layout')
 @section('content')
-        <h1>liem dep trai</h1>
     <section class="section-slide">
         <div class="wrap-slick1 rs1-slick1">
             <div class="slick1">
