@@ -1,104 +1,159 @@
 @extends('layout')
-
 @section('content')
-<div class="container py-5">
-    <h1 class="text-center mb-4">Tất cả sản phẩm</h1>
-
-    <!-- Hiển thị các sản phẩm -->
-    <div class="row">
-        @foreach ($products as $item)
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="product-wrapper @if ($item->quantity == 0) out-of-stock @endif">
-                    <div class="block2 position-relative">
-                        <!-- Hình ảnh sản phẩm -->
-                        <div class="block2-pic hov-img0">
-                            @if ($item->image)
-                                @php
-                                    $images = json_decode($item->image);
-                                @endphp
-                                @if (!empty($images) && (is_array($images) || is_object($images)))
-                                    <img src="{{ asset('storage/' . $images[0]) }}" 
-                                         class="img-fluid" 
-                                         alt="{{ $item->name }}" 
-                                         style="height: 250px; object-fit: cover;">
-                                @else
-                                    <img src="{{ asset('images/default-placeholder.jpg') }}" 
-                                         alt="No Image" 
-                                         class="img-fluid" 
-                                         style="height: 250px; object-fit: cover;">
-                                @endif
-                            @else
-                                <img src="{{ asset('images/default-placeholder.jpg') }}" 
-                                     alt="No Image" 
-                                     class="img-fluid" 
-                                     style="height: 250px; object-fit: cover;">
-                            @endif
-
-                            <!-- Nút "Quick View" -->
-                            <a href="{{ route('products.show', $item->id) }}" 
-                               class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                                Xem nhanh
-                            </a>
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('img/banner1.jpg') }}');">
+        <h2 class="ltext-105 cl0 txt-center">
+            Bàn học
+        </h2>
+    </section>
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            @include('includes.fileproduct')
+            <div class="col-lg-9 col-md-12">
+                <div class="row pb-3">
+                    <div class="col-12 pb-1">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <form action="{{ route('search') }}" method="GET">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search by name">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-transparent text-primary">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="dropdown ml-4">
+                                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                            Sort by
+                                        </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                    <a class="dropdown-item" href="#">Latest</a>
+                                    <a class="dropdown-item" href="#">Popularity</a>
+                                    <a class="dropdown-item" href="#">Best Rating</a>
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Thông tin sản phẩm -->
-                        <div class="block2-txt flex-w flex-t p-t-14 position-relative">
-                            <!-- Nhãn Sale nằm góc trên bên trái -->
-                            @if ($item->sale)
-                                <span class="sale-badge position-absolute top-0 start-0 bg-danger text-white p-1">Sale</span>
-                            @endif
-                        
-                            <div class="block2-txt-child1 flex-col-l">
-                                <a href="{{ route('products.show', $item->id) }}" 
-                                   class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" 
-                                   style="font-weight: 900;font-size: 16.5px;">
-                                    {{ $item->name }}
-                                </a>
+                    </div>
+                    @foreach ($products as $item)
+                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                        <div class="card product-item border-0 mb-4">
+                            <!-- Hình ảnh sản phẩm -->
+                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100" 
+                                    src="{{ asset('storage/' . ($item->image ? json_decode($item->image)[0] : 'images/default-placeholder.jpg')) }}" 
+                                    alt="{{ $item->name }}" 
+                                    style="height: 250px; object-fit: cover;">
+                                <!-- Nhãn Sale -->
+                                @if ($item->sale_percentage)
+                                    <span class="badge bg-danger text-white position-absolute" style="top: 10px; left: 10px; z-index: 2;">
+                                        Sale {{ $item->sale_percentage }}%
+                                    </span>
+                                @endif
                                 
                                 <!-- Nhãn Hết hàng -->
                                 @if ($item->quantity == 0)
-                                    <span class="stext-105 cl3 fw-bold text-danger">Hết hàng</span>
-                                @endif
-                        
-                                @if ($item->sale_percentage)
-                                    <!-- Giá cũ bị gạch ngang -->
-                                    <span class="stext-105 cl3 text-muted text-decoration-line-through">
-                                        {{ number_format($item->price, 0, ',', '.') }} VND
-                                    </span>
-                                    <!-- Giá mới được giảm -->
-                                    <span class="stext-105 cl3 text-danger fw-bold">
-                                        {{ number_format($item->price - $item->price * ($item->sale_percentage / 100), 0, ',', '.') }} VND
-                                    </span>
-                                @else
-                                    <!-- Hiển thị giá bình thường khi không có sale -->
-                                    <span class="stext-105 cl3">
-                                        {{ number_format($item->price, 0, ',', '.') }} VND
+                                    <span class="badge bg-dark text-white position-absolute" style="top: 10px; right: 10px; z-index: 2;">
+                                        Hết hàng
                                     </span>
                                 @endif
                             </div>
+        
+                            <!-- Thông tin sản phẩm -->
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3">{{ $item->name }}</h6>
+                                <div class="d-flex justify-content-center">
+                                    @if ($item->sale_percentage)
+                                        <h6>{{ number_format($item->price - $item->price * ($item->sale_percentage / 100), 0, ',', '.') }} VND</h6>
+                                        <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} VND</del></h6>
+                                    @else
+                                        <h6>{{ number_format($item->price, 0, ',', '.') }} VND</h6>
+                                    @endif
+                                </div>
+                            </div>
+        
+                            <!-- Nút thao tác -->
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                <a href="{{ route('products.show', $item->id) }}" 
+                                   class="btn btn-sm text-dark p-0 @if ($item->quantity == 0) disabled @endif">
+                                    <i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết
+                                </a>
+                                <form action="{{ route('wishlist.store', $item->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm text-dark p-0">
+                                        <i class="fas fa-heart text-danger mr-1"></i>Yêu thích
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        
                     </div>
+                @endforeach
+                    
+                    <div class="col-12 pb-1">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center mb-3">
+                    
+                                <!-- Nút Previous -->
+                                @if ($products->currentPage() == 1)
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                @endif
+                    
+                                <!-- Số trang logic -->
+                                @for ($i = 1; $i <= $products->lastPage(); $i++)
+                                    <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+                    
+                                <!-- Nút Next -->
+                                @if ($products->currentPage() == $products->lastPage())
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                @endif
+                    
+                            </ul>
+                        </nav>
+                    </div>
+                    
                 </div>
             </div>
-        @endforeach
+        </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination justify-content-center mt-4">
-        {{ $products->links() }}
-    </div>
-</div>
-@endsection
-<style>
-    .sale-badge {
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 3px;
-}
+    <style>
+        /* làm mờ sản phẩm khi hêts hàng*/
+        .block2.out-of-stock {
+            opacity: 0.5;
+            pointer-events: none;
+            /* Vô hiệu hóa khả năng nhấp chuột */
+        }
 
-.out-of-stock {
-    opacity: 0.5;
-    pointer-events: none;
-}
+        .block2block2.out-of-stock img {
+            filter: grayscale(100%);
+            /* Làm mờ ảnh sản phẩm */
+        }
     </style>
+@endsection
