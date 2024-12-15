@@ -23,7 +23,7 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($user as $item)
+                                            @foreach ($users as $item)
                                                 <tr>
                                                     <td>
                                                         {{ $item->name }}
