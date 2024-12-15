@@ -185,4 +185,9 @@ class ProductController extends Controller
             }
         }
     }
+    public function showAll()
+    {
+        $products = Product::paginate(12); // Hiển thị 12 sản phẩm mỗi trang
+        return view('user.products.showall', compact('products'));
+    }
 }
