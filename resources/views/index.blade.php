@@ -289,29 +289,31 @@
             <h2 class="section-title px-5"><span class="px-2">Bài viết</span></h2>
         </div>
   
-      <div class="row">
-        @foreach($posts as $post)
-          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <div class="card h-100 shadow-sm">
-              <a href="{{ route('user.blog.show', $post->id) }}">
-                <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}"
-                     class="card-img-top" alt="Bài viết">
-              </a>
-              <div class="card-body">
-                <h5 class="card-title">{{ $post->short_description }}</h5>
-                <p class="card-text text-muted">
-                  Ngày đăng: {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}
-                </p>
-              </div>
-              <div class="card-footer text-center">
-                <a href="{{ route('user.blog.show', $post->id) }}" class="btn btn-primary btn-sm">Đọc Thêm</a>
-              </div>             
-            </div>
-          </div>
-        @endforeach
-      </div>
+        <div class="row">
+            @foreach($posts as $post)
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <a href="{{ route('user.blog.show', $post->id) }}">
+                            <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}"
+                                 class="card-img-top" alt="Bài viết">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $post->short_description }}</h5>
+                            <p class="card-text text-muted">
+                                Ngày đăng: {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}
+                            </p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('user.blog.show', $post->id) }}" class="btn btn-primary btn-sm">Đọc Thêm</a>
+                        </div>             
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
-  </section>
+</section>
+
+
   
     <style>
         .sale-badge {
@@ -398,6 +400,29 @@
         }
     </style>
     <style>
+
+        .card {
+            display: flex;
+            flex-direction: column; 
+            min-height: 400px; 
+        }
+
+
+        .card-img-top {
+            object-fit: cover; 
+            height: 250px; 
+        }
+
+  
+        .card-body {
+            flex-grow: 1; /
+        }
+        .card-footer {
+            flex-shrink: 0; 
+        }
+        .card-footer .btn {
+            width: 100%; 
+        }
         .block1-link {
             text-decoration: none !important;
         }

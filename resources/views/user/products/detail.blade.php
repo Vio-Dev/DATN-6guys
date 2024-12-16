@@ -62,9 +62,9 @@
                         Giá: {{ number_format($product->price) }} VNĐ
                     </span>
                 @endif
-                <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit clita ea.
-                    Sanc invidunt ipsum et, labore clita lorem magna lorem ut. Erat lorem duo dolor no sea nonumy. Accus
-                    labore stet, est lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum kasd rebum.
+                <p class="mb-4">
+                    Mọi sản phẩm của 6guys đều có xuất sứ rõ ràng và được đảm bảo về chất lượng.<br> Chúng tôi rất hân hạnh được phục vụ bạn
+                    mang đến cho bạn 1 sản phẩm tuyệt vời.
                 </p>
                 {{-- <div class="d-flex mb-3">
                             <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
@@ -116,29 +116,27 @@
                                 </div>
                             </form>
                         </div> --}}
-                <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control bg-secondary text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary px-3">
-                            <i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng
-                        </button>
-                    </form>
-                </div>
+                        <form action="{{ route('cart.add', ['itemId' => $product->id]) }}" method="POST">
+                            @csrf
+                            <div class="d-flex align-items-center mb-4 pt-2">
+                                <div class="input-group quantity mr-3" style="width: 130px;">
+                                    <button type="button" class="btn btn-primary btn-minus">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <input type="number" name="quantity" class="form-control bg-secondary text-center" value="1" min="1">
+                                    <button type="button" class="btn btn-primary btn-plus">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button type="submit" class="btn btn-primary px-3">
+                                    <i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </form>
+                        
+                        
                 <div class="d-flex pt-2">
-                    <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+                    <p class="text-dark font-weight-medium mb-0 mr-2"></p>
                     <div class="d-inline-flex">
                         <a class="text-dark px-2" href="">
                             <i class="fab fa-facebook-f"></i>
@@ -159,24 +157,14 @@
         <div class="row px-xl-5">
             <div class="col">
                 <div class="nav nav-tabs justify-content-center border-secondary mb-4">
-                    <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a>
-                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                    <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Mô Tả</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Thông Tin</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Bình Luận (0)</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt
-                            duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur
-                            invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet
-                            rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam
-                            consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam,
-                            ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr
-                            sanctus eirmod takimata dolor ea invidunt.</p>
-                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor
-                            consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita
-                            diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed
-                            et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                        <h4 class="mb-3">Mô Tả Sản Phẩm</h4>
+                        <p>{!! nl2br(e($product->content)) !!}</p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
                         <h4 class="mb-3">Additional Information</h4>
@@ -423,6 +411,20 @@
         }
     });
 });
+document.querySelectorAll('.btn-plus').forEach(button => {
+    button.addEventListener('click', function () {
+        const input = this.closest('.input-group').querySelector('input[name="quantity"]');
+        input.value = parseInt(input.value) + 1;
+    });
+});
 
+document.querySelectorAll('.btn-minus').forEach(button => {
+    button.addEventListener('click', function () {
+        const input = this.closest('.input-group').querySelector('input[name="quantity"]');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    });
+});
         </script>
     @endsection
