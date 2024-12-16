@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('image'); // Để lưu nhiều ảnh dạng JSON
             $table->integer('quantity'); // Số lượng sản phẩm
             $table->timestamps();
-        
             $table->foreign('category_id')->references('id')->on('categories');
         });
         

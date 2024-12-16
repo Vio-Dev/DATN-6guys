@@ -39,6 +39,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
+
             'content' => 'required|string',
             'image' => 'required|array|min:1', // Ít nhất 1 hình ảnh
             'image.*' => 'mimes:jpg,jpeg,png,gif|max:2048', // Kiểm tra định dạng và dung lượng ảnh
@@ -52,7 +53,7 @@ class ProductController extends Controller
             'content.required' => 'Mô tả sản phẩm không được để trống.',
             'image.required' => 'Vui lòng chọn ít nhất 1 hình ảnh.',
             'image.*.mimes' => 'Chỉ cho phép tải lên các tệp hình ảnh JPG, JPEG, PNG, GIF.',
-            'image.*.max' => 'Mỗi hình ảnh phải có dung lượng không vượt quá 2MB.',
+
         ]);
 
         // Nếu validate thành công, thực hiện thêm sản phẩm vào cơ sở dữ liệu
@@ -61,10 +62,19 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
+
         $product->content = $request->content;
 
         // Lưu hình ảnh nếu có
         if ($request->hasFile('image')) {
+
+        $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
+        $product->sale_percentage = $request->input('sale_percentage') ?? null;
+        if (!$request->has('sale')) {
+            $validatedData['sale_percentage'] = null;
+        }
+        // Lưu nhiều ảnh
+        if ($request->hasfile('image')) {
             $images = [];
             foreach ($request->file('image') as $file) {
                 $path = $file->store('products', 'public');
@@ -199,8 +209,9 @@ class ProductController extends Controller
             }
         }
     }
-    public function showAll()
+    public function showAll(Request $request)
     {
+
         $products = Product::paginate(6); // Hiển thị 12 sản phẩm mỗi trang
         return view('user.products.showall', compact('products'));
     }

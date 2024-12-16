@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <form action="{{ route('search') }}" method="GET">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search by name">
+                                    <input type="text" class="form-control" placeholder="tìm kiếm">
                                     <div class="input-group-append">
                                         <span class="input-group-text bg-transparent text-primary">
                                             <i class="fa fa-search"></i>
@@ -22,7 +22,7 @@
                                     </div>
                                 </div>
                             </form>
-<<<<<<< Updated upstream
+
                             <div class="dropdown ml-4">
                                 <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
@@ -34,10 +34,9 @@
                                     <a class="dropdown-item" href="#">Best Rating</a>
                                 </div>
                             </div>
-=======
+
                             
-                       
->>>>>>> Stashed changes
+                    
                         </div>
                     </div>
                     @foreach ($products as $item)

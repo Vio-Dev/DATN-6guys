@@ -6,15 +6,12 @@
             <div class="title-header">
                 <h5>Thêm Bài Viết</h5>
             </div>
-
             <div class="row">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
-                                <div class="card-header-2">
-                                    <h5>Thông Tin Bài Viết</h5>
-                                </div>
+                               
                                 <div class="card-body">
                                     <form action="{{ route('admin.blog.store') }}" method="POST"
                                         enctype="multipart/form-data" class="theme-form theme-form-2 mega-form">
@@ -75,14 +72,14 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Bìa</label>
                                             <div class="col-sm-10">
-<<<<<<< Updated upstream
                                                 <input class="form-control @error('cover_image') is-invalid @enderror"
                                                     type="file" name="cover_image" accept="image/*"
                                                     onchange="previewCoverImage()">
                                                 @error('cover_image')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
-=======
+
+
                                                 @if (old('featured_image') || (isset($post) && $post->featured_image))
                                                     <div class="mb-2">
                                                         <img src="{{ isset($post) && $post->featured_image ? Storage::url($post->featured_image) : old('featured_image') }}" 
@@ -90,7 +87,6 @@
                                                     </div>
                                                 @endif
                                                 <input type="file" class="form-control" name="featured_image" accept="image/*" onchange="previewCoverImage()">
->>>>>>> Stashed changes
                                             </div>
                                         </div>
 
