@@ -47,17 +47,28 @@
                         </div>
                     </div>
 
+                    
                     <!-- Hình Ảnh Bìa -->
                     <div class="mb-4 row align-items-center">
                         <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Bìa</label>
                         <div class="col-sm-10">
                             @if ($post->featured_image)
                                 <div class="mb-2">
-                                    <img src="{{ Storage::url($post->featured_image) }}" alt="Cover Image"
+                                    <!-- Hiển thị ảnh cũ nếu có -->
+                                    <img src="{{ Storage::url($post->featured_image) }}" alt="Cover Image" 
                                         style="width: 150px; height: auto; object-fit: cover;" class="rounded">
                                 </div>
                             @endif
-                            <input type="file" class="form-control" name="featured_image" accept="image/*">
+                            <!-- Input file cho việc chọn ảnh mới -->
+                            <input type="file" class="form-control" name="featured_image" accept="image/*" onchange="previewCoverImage()">
+                        </div>
+                    </div>
+
+                    <!-- Xem Trước Ảnh Bìa -->
+                    <div class="mb-4 row align-items-center">
+                        <label class="form-label-title col-sm-2 mb-0">Xem Trước Ảnh Bìa</label>
+                        <div class="col-sm-10" id="coverImagePreview">
+                            <!-- Ảnh xem trước sẽ hiển thị ở đây khi người dùng chọn ảnh mới -->
                         </div>
                     </div>
 
@@ -99,3 +110,28 @@
 
 
 @endsection
+<script>
+    // JavaScript để xem trước ảnh khi người dùng chọn
+    function previewCoverImage() {
+        const file = document.querySelector('input[name="featured_image"]').files[0]; // Lấy file ảnh đã chọn
+        const previewContainer = document.getElementById('coverImagePreview'); // Vùng xem trước ảnh
+
+        if (file) {
+            const reader = new FileReader(); // Đọc file ảnh
+
+            reader.onloadend = function () {
+                // Tạo một phần tử img và hiển thị ảnh xem trước
+                let imgElement = document.createElement('img');
+                imgElement.src = reader.result; // Đặt đường dẫn cho ảnh xem trước
+                imgElement.style.width = '150px';
+                imgElement.style.height = 'auto';
+                imgElement.style.objectFit = 'cover';
+                imgElement.classList.add('rounded');
+                previewContainer.innerHTML = ''; // Xóa nội dung cũ trong vùng xem trước
+                previewContainer.appendChild(imgElement); // Thêm ảnh vào vùng xem trước
+            }
+
+            reader.readAsDataURL(file); // Đọc file ảnh
+        }
+    }
+</script>

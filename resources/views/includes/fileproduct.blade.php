@@ -1,5 +1,9 @@
   <!-- Shop Sidebar Start -->
             <div class="col-lg-3 col-md-12">
+
+                <!-- Price Start -->
+                
+               
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">Danh mục sản phẩm</h5>
                     <ul class="nav nav-pills mb-3">
