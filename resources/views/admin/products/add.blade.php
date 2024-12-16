@@ -2,7 +2,7 @@
 @section('content')
     <div class="page-body">
         <div class="title-header">
-            <h5>Add New Product</h5>
+            <h5>Thêm sản phẩm mới</h5>
         </div>
 
         <!-- New Product Add Start -->
@@ -30,7 +30,21 @@
                                             <input class="form-control" type="number" name="price" placeholder="Price" min="0" required>
                                         </div>
                                     </div>
-                                
+                                    <div class="mb-4 row align-items-center">
+                                        <label class="col-sm-2 col-form-label form-label-title">Đang Sale</label>
+                                        <div class="col-sm-10">
+                                            <input type="checkbox" name="sale" id="saleCheckbox" class="form-check-input">
+                                            <label class="form-check-label" for="saleCheckbox">Chọn nếu sản phẩm đang được giảm giá</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4 row align-items-center" id="salePercentageGroup" style="display: none;">
+                                        <label class="col-sm-2 col-form-label form-label-title">Phần Trăm Giảm Giá</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" type="number" name="sale_percentage" placeholder="Nhập phần trăm giảm giá (VD: 20 cho 20%)" min="1" max="100">
+                                        </div>
+                                    </div>
+                                    
                                     <div class="mb-4 row align-items-center">
                                         <label class="form-label-title col-sm-2 mb-0">Product Description</label>
                                         <div class="col-sm-10">
@@ -44,7 +58,7 @@
                                             <input class="form-control" type="number" name="quantity" placeholder="Quantity" min="1" required>
                                         </div>
                                     </div>
-                                
+                                    
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-2 col-form-label form-label-title">Category</label>
                                         <div class="col-sm-10">
@@ -130,4 +144,22 @@
             }
         }
     }
+    
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const saleCheckbox = document.getElementById('saleCheckbox');
+        const salePercentageGroup = document.getElementById('salePercentageGroup');
+
+        // Lắng nghe sự kiện thay đổi của checkbox
+        saleCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                salePercentageGroup.style.display = 'flex';
+            } else {
+                salePercentageGroup.style.display = 'none';
+                // Đặt giá trị sale_percentage về rỗng khi không chọn sale
+                document.querySelector('input[name="sale_percentage"]').value = '';
+            }
+        });
+    });
 </script>
