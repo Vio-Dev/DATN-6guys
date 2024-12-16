@@ -60,7 +60,7 @@
                                             <span class="badge bg-danger">Đã hủy</span>
                                             @break
                                         @default
-                                            <span class="badge bg-secondary">Đang đổi trả </span>
+                                            <span class="badge bg-warning text-dark">Đang đổi trả </span>
                                     @endswitch
                                 </td>
 

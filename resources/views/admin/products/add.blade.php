@@ -85,7 +85,7 @@
                                         </select>
                                         @error('category_id')
                                             <span class="invalid-feedback">{{ $message }}</span>
-
+                                            @enderror
                                     </div>
                                 </div>
 
@@ -133,34 +133,48 @@
 @endsection
 
 <script>
-    function previewImages() {
-        var preview = document.getElementById('imagePreview');
-        preview.innerHTML = "";
-        var files = document.getElementById('formFileMultiple').files;
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('formFileMultiple');
+        const previewContainer = document.getElementById('imagePreview');
 
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
+        fileInput.addEventListener('change', function () {
+            // Xóa toàn bộ ảnh đã hiển thị trước đó
+            previewContainer.innerHTML = '';
 
-            if (file.type.match('image.*')) {
-                var reader = new FileReader();
+            const files = fileInput.files;
 
-                reader.onload = (function (file) {
-                    return function (e) {
-                        var img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.style.width = '100px';
-                        img.style.marginRight = '10px';
-                        img.style.marginBottom = '10px';
-                        preview.appendChild(img);
-                    };
-                })(file);
+            if (files.length > 0) {
+                Array.from(files).forEach(file => {
+                    // Kiểm tra xem file có phải là ảnh hay không
+                    if (file.type.match('image.*')) {
+                        const reader = new FileReader();
 
-                reader.readAsDataURL(file);
+                        // Khi đọc file hoàn tất
+                        reader.onload = function (event) {
+                            // Tạo thẻ <img> để hiển thị ảnh
+                            const img = document.createElement('img');
+                            img.src = event.target.result;
+                            img.style.width = '100px';
+                            img.style.marginRight = '10px';
+                            img.style.marginBottom = '10px';
+                            img.style.border = '1px solid #ddd';
+                            img.style.padding = '5px';
+                            img.style.borderRadius = '5px';
+
+                            previewContainer.appendChild(img);
+                        };
+
+                        // Đọc file dưới dạng DataURL
+                        reader.readAsDataURL(file);
+                    } else {
+                        console.warn(`File không phải là ảnh: ${file.name}`);
+                    }
+                });
             }
-        }
-    }
-    
+        });
+    });
 </script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const saleCheckbox = document.getElementById('saleCheckbox');
