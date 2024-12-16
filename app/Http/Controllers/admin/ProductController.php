@@ -32,42 +32,49 @@ class ProductController extends Controller
         return view('admin.products.add', compact('category'));
     }
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'content' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'category_id' => 'required|exists:categories,id',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra định dạng ảnh
-            'sale_percentage' => 'nullable|integer|min:1|max:100',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:100|unique:products,name',
+        'price' => 'required|numeric',
+        'content' => 'required|string',
+        'quantity' => 'required|integer|min:1',
+        'category_id' => 'required|exists:categories,id',
+        'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        'sale_percentage' => 'nullable|integer|min:1|max:100',
+    ], [
+        // Tùy chỉnh thông báo lỗi
+        'name.unique' => 'Tên sản phẩm đã tồn tại, vui lòng chọn tên khác.',
+        'name.required' => 'Vui lòng nhập tên sản phẩm.',
+        'price.required' => 'Vui lòng nhập giá sản phẩm.',
+        'content.required' => 'Vui lòng nhập nội dung mô tả sản phẩm.',
+        'quantity.required' => 'Vui lòng nhập số lượng sản phẩm.',
+        'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
+    ]);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->content = $request->content;
-        $product->quantity = $request->quantity;
-        $product->category_id = $request->category_id;
-        $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
-        $product->sale_percentage = $request->input('sale_percentage') ?? null;
-        if (!$request->has('sale')) {
-            $validatedData['sale_percentage'] = null;
+    $product = new Product();
+    $product->name = $request->name;
+    $product->price = $request->price;
+    $product->content = $request->content;
+    $product->quantity = $request->quantity;
+    $product->category_id = $request->category_id;
+    $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
+    $product->sale_percentage = $request->input('sale_percentage') ?? null;
+
+    // Lưu nhiều ảnh
+    if ($request->hasfile('image')) {
+        $images = [];
+        foreach ($request->file('image') as $image) {
+            $path = $image->store('products', 'public'); // Lưu ảnh vào thư mục public/storage/products
+            $images[] = $path; // Lưu đường dẫn vào mảng
         }
-        // Lưu nhiều ảnh
-        if ($request->hasfile('image')) {
-            $images = [];
-            foreach ($request->file('image') as $image) {
-                $path = $image->store('products', 'public'); // Lưu ảnh vào thư mục public/storage/products
-                $images[] = $path; // Lưu đường dẫn vào mảng
-            }
-            $product->image = json_encode($images); // Chuyển đổi mảng thành JSON để lưu vào CSDL
-        }
-
-        $product->save();
-
-        return redirect()->route('admin.products.index')->with('success', 'Product added successfully.');
+        $product->image = json_encode($images); // Chuyển đổi mảng thành JSON để lưu vào CSDL
     }
+
+    $product->save();
+
+    return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm thành công.');
+}
+
 
     public function show($id) // Phương thức hiển thị chi tiết sản phẩm
     {
@@ -148,7 +155,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
     }
 
     public function destroy(string $id)
