@@ -2,7 +2,7 @@
 @section('content')
     <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('img/banner1.jpg') }}');">
         <h2 class="ltext-105 cl0 txt-center">
-            Bàn học
+            Tất Cả Sản Phẩm
         </h2>
     </section>
     <div class="container-fluid pt-5">
@@ -22,17 +22,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="dropdown ml-4">
-                                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                            Sort by
-                                        </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
-                                    <a class="dropdown-item" href="#">Latest</a>
-                                    <a class="dropdown-item" href="#">Popularity</a>
-                                    <a class="dropdown-item" href="#">Best Rating</a>
-                                </div>
-                            </div>
+                            
                        
                         </div>
                     </div>

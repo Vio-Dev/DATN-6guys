@@ -43,9 +43,9 @@
                                                     <!-- Hình Ảnh Bìa -->
                                                     <td>
                                                         @if($post->featured_image)
-                                                            <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}" alt="IMG-BLOG">
+                                                            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="IMG-BLOG">
                                                         @else
-                                                            <img src="{{ asset('images/default-placeholder.png') }}" alt="Placeholder">
+                                                        <img src="{{ asset('images/default-placeholder.png') }}" alt="Placeholder">
                                                         @endif
                                                     </td>
     

@@ -16,7 +16,7 @@ class HomeController extends Controller
     {
         // Lấy tất cả sản phẩm
         $products = Product::take(12)->get();
-        // $products = Product::orderBy('id', 'desc')->take(12)->get(); dòng này không được xóa nhé
+        // $products = Product::orderBy('id', 'desc')->take(12)->get(); //dòng này không được xóa nhé
 
         // Lấy tất cả danh mục
         $categories = Category::take(4)->get();
