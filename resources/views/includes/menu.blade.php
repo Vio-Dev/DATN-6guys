@@ -19,7 +19,7 @@
                                  <a href="{{ route('index') }}">Trang chủ</a>
                              </li>
                              <li class="active-menu" >
-                                 <a href="{{ route('products.showall') }}" data-label1="hot">Sản phẩm</a>
+                                 <a href="{{ route('products.index') }}" data-label1="hot">Sản phẩm</a>
                                  <ul class="sub-menu">
                                      <li><a href="{{ route('category.manhinh') }}">Màn Hình</a></li>
                                      <li><a href="{{ route('category.banphimco') }}">Bàn Phím</a></li>

@@ -4,7 +4,6 @@
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
     
     <div class="container my-5">
         <h2 class="text-center mb-4 text-uppercase fw-bold text-primary">Thông tin thanh toán</h2>
@@ -143,7 +142,46 @@
             </div>
         </form>
     </div>
+    <style>
+        /* Thay đổi màu chữ tiêu đề */
+        h2.text-primary {
+            color: #007bff; /* Xanh */
+        }
+    
+        h4.text-secondary {
+            color: #6c757d; /* Xám */
+        }
+    
+        p.text-secondary {
+            color: #555; /* Xám đậm */
+        }
+    
+        .btn-success {
+            color: #fff; /* Thêm màu chữ trắng cho nút xanh */
+        }
+    
+        /* Thay đổi màu chữ trong thông tin giỏ hàng */
+        .table th,
+        .table td {
+            color: #333; /* Màu đen nhẹ */
+        }
+    
+        /* Thêm hover effect */
+        .btn:hover {
+            color: #000;
+        }
+    
+        /* Thêm màu chữ thông báo thông tin */
+        .alert-success {
+            color: #fff; /* Màu trắng trên nền xanh */
+        }
+    
+        .alert-info {
+            color: #000; /* Thêm màu chữ thông tin */
+        }
 
+    </style>
+    
     <script>
         document.querySelectorAll('[name="payment_method"]').forEach(method => {
             method.addEventListener('change', function() {
