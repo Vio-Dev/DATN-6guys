@@ -41,7 +41,7 @@ class CartController extends Controller
     $cart = session()->get('cart', []);
 
     // Lấy số lượng sản phẩm từ request
-    $quantity = $request->input('quantity', 1); // Mặc định là 1 nếu không có số lượng
+    $quantity = (int) $request->input('quantity', 1); // Ép kiểu để đảm bảo nhận số lượng đúng
 
     // Kiểm tra số lượng sản phẩm trong kho
     if ($product->quantity < $quantity) {
@@ -51,7 +51,6 @@ class CartController extends Controller
     // Tính giá sản phẩm sau khi giảm giá nếu có
     $price = $product->price;
     if ($product->sale) {
-        // Nếu có giảm giá, tính giá mới sau khi giảm
         $price = $product->price - ($product->price * ($product->sale_percentage / 100));
     }
 
@@ -61,14 +60,14 @@ class CartController extends Controller
         if ($product->quantity < $cart[$itemId]['quantity'] + $quantity) {
             return redirect()->route('cart.index')->with('error', 'Số lượng sản phẩm trong kho không đủ.');
         }
-        $cart[$itemId]['quantity'] += $quantity;
+        $cart[$itemId]['quantity'] += $quantity; // Cộng dồn số lượng
     } else {
         // Thêm sản phẩm vào giỏ hàng nếu chưa có
         $cart[$itemId] = [
             'id' => $itemId,
             'name' => $product->name,
-            'price' => $price, // Sử dụng giá sau khi giảm giá nếu có
-            'quantity' => $quantity,
+            'price' => $price,
+            'quantity' => $quantity, // Thêm số lượng chính xác từ form
             'image' => $product->image,
         ];
     }
@@ -78,6 +77,7 @@ class CartController extends Controller
 
     return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
 }
+
 
 
 

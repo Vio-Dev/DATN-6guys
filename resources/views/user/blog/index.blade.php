@@ -13,9 +13,10 @@
 				<div class="col-md-8 col-lg-9 p-b-80">
 					<div class="p-r-45 p-r-0-lg">
 						
-						@foreach($posts as $post)
-						<div class="col-md-4 mb-4">
-							<div class="p-b-63">
+						<div class="row">
+							@foreach($posts as $post)
+								<div class="col-md-6 mb-4"> <!-- Đây là lớp Bootstrap để tạo 2 cột -->
+									<div class="post-item">
 								<a href="{{ route('user.blog.show', $post->id) }}" class="hov-img0 how-pos5-parent">
 									<!-- Hiển thị ảnh bài viết -->
 									@if($post->featured_image)
@@ -73,6 +74,7 @@
 							</div>
 						</div>
 						@endforeach
+					</div>
 						<!-- Pagination -->
 						<div class="flex-l-m flex-w w-full p-t-10 m-lr--7">
 							<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
@@ -501,3 +503,21 @@
 		</div>
 	</section>	
 @endsection
+<style>
+	/* Đảm bảo các bài viết được xếp thành 2 cột trên màn hình lớn hơn */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-md-6 {
+    width: 50%;  /* Mỗi bài viết chiếm 50% chiều rộng */
+    padding: 15px;
+}
+
+@media (max-width: 767px) {
+    .col-md-6 {
+        width: 100%; /* Trên các màn hình nhỏ, các bài viết sẽ chiếm 100% chiều rộng */
+    }
+}
+	</style>

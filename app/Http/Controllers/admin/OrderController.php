@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
-use App\Models\admin\Orders;
-use App\Models\admin\Orders_item;
+use App\Models\Admin\Orders;
+use App\Models\Admin\Orders_item;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
