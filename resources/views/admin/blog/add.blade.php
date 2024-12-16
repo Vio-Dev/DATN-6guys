@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 {"hello"}
 @section('content')
-
     <div class="page-body">
         <div class="container-fluid">
             <div class="title-header">
@@ -21,25 +20,38 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Tiêu Đề</label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" type="text" name="title"
-                                                    placeholder="Nhập tiêu đề bài viết" value="{{ old('title') }}"
-                                                    required>
+                                                <input class="form-control @error('title') is-invalid @enderror"
+                                                    type="title" name="title" placeholder="Nhập tiêu đề bài viết"
+                                                    value="{{ old('title') }}" required>
+                                                @error('title')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
-                                        <!-- mô tả ngắn -->
+
+                                        <!-- Mô Tả Ngắn -->
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Mô tả ngắn</label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" type="text" name="short_description"
-                                                    placeholder="Nhập mô tả bài viết" value="{{ old('short_description') }}"
-                                                    required>
+                                                <input class="form-control @error('short_description') is-invalid @enderror"
+                                                    type="text" name="short_description"
+                                                    placeholder="Nhập mô tả bài viết"
+                                                    value="{{ old('short_description') }}">
+                                                @error('short_description')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
+
                                         <!-- Nội Dung -->
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Nội Dung</label>
                                             <div class="col-sm-10">
-                                                <textarea class="form-control" name="content" rows="5" placeholder="Nhập nội dung bài viết" required>{{ old('content') }}</textarea>
+                                                <textarea class="form-control @error('content') is-invalid @enderror" name="content" rows="5"
+                                                    placeholder="Nhập nội dung bài viết">{{ old('content') }}</textarea>
+                                                @error('content')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -47,8 +59,12 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Tên Tác Giả</label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" type="text" name="author"
-                                                    placeholder="Nhập tên tác giả" value="{{ old('author') }}" required>
+                                                <input class="form-control @error('author') is-invalid @enderror"
+                                                    type="text" name="author" placeholder="Nhập tên tác giả"
+                                                    value="{{ old('author') }}" required>
+                                                @error('author')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -56,6 +72,14 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Bìa</label>
                                             <div class="col-sm-10">
+                                                <input class="form-control @error('cover_image') is-invalid @enderror"
+                                                    type="file" name="cover_image" accept="image/*"
+                                                    onchange="previewCoverImage()">
+                                                @error('cover_image')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+
+
                                                 @if (old('featured_image') || (isset($post) && $post->featured_image))
                                                     <div class="mb-2">
                                                         <img src="{{ isset($post) && $post->featured_image ? Storage::url($post->featured_image) : old('featured_image') }}" 
@@ -78,17 +102,15 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Trong Bài Viết</label>
                                             <div class="col-sm-10">
-
-                                                <input class="form-control form-choose" type="file" name="images[]"
-                                                    multiple accept="image/*" onchange="previewPostImages()">
+                                                <input
+                                                    class="form-control form-choose @error('images') is-invalid @enderror"
+                                                    type="file" name="images[]" multiple accept="image/*"
+                                                    onchange="previewPostImages()">
+                                                @error('images')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
-
-
-                                                <input class="form-control form-choose" type="file" name="image_in_content" accept="image/*" onchange="previewPostImages()">
-                                            </div>
-                                        </div>
-                                            
 
                                         <!-- Xem Trước Ảnh Trong Bài Viết -->
                                         <div class="mb-4 row align-items-center">
@@ -98,10 +120,10 @@
                                             </div>
                                         </div>
 
-                                        <!-- Nút Lưu -->
-                                        <div class="row">
+                                        <!-- Submit Button -->
+                                        <div class="mb-4 row">
                                             <div class="col-sm-10 offset-sm-2">
-                                                <input type="submit" value="Lưu Bài Viết" class="btn btn-primary">
+                                                <button type="submit" class="btn btn-primary">Lưu Bài Viết</button>
                                             </div>
                                         </div>
                                     </form>

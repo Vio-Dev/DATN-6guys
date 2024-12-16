@@ -87,7 +87,7 @@
                         <div class="Typeahead Typeahead--twitterUsers">
                             <div class="u-posRelative">
                                 <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text"
-                                    placeholder="Search Voxo .." name="q" title="" autofocus>
+                                    placeholder="Tìm kiếm .." name="q" title="" autofocus>
                                 <i class="close-search" data-feather="x"></i>
                                 <div class="spinner-border Typeahead-spinner" role="status">
                                     <span class="sr-only">Loading...</span>
