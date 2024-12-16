@@ -17,7 +17,7 @@ class ProductController extends Controller
     }
     public function view()
     {
-        $products = $this->product->latest()->paginate(5);
+        $products = Product::latest()->take(6)->get();
         return view('index', compact('products'));
     }
     public function index()
@@ -187,7 +187,7 @@ class ProductController extends Controller
     }
     public function showAll()
     {
-        $products = Product::paginate(12); // Hiển thị 12 sản phẩm mỗi trang
+        $products = Product::paginate(6); // Hiển thị 12 sản phẩm mỗi trang
         return view('user.products.showall', compact('products'));
     }
 }

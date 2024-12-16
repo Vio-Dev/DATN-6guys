@@ -18,13 +18,11 @@ class CategoryController extends Controller
         // $category = Category::orderBy('created_at', 'desc')->get(); // dòng này không được xóa 
         return view('admin.categories.index', compact('category'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function add()
     {
-
         return view('admin.categories.add');
     }
 
@@ -42,61 +40,52 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showManhinh()
+    public function showManhinh(Request $request)
     {
-        // Định nghĩa ID của danh mục Màn Hình
         $id_of_screen_category = 2; // Thay đổi giá trị này thành ID thực tế của danh mục
     
-        // Lấy sản phẩm theo category_id
-        $products = Product::where('category_id', $id_of_screen_category)->get();
+        // Lấy sản phẩm theo category_id và phân trang với 10 sản phẩm mỗi trang
+        $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
     
-        // Truyền biến $products đến view
         return view('user.category.manhinh', compact('products'));
     }
-    public function showbanphimco()
+    
+    public function showbanphimco(Request $request)
     {
-        // Định nghĩa ID của danh mục Màn Hình
-        $id_of_screen_category = 1; // Thay đổi giá trị này thành ID thực tế của danh mục
+        $id_of_screen_category = 1;
     
-        // Lấy sản phẩm theo category_id
-        $products = Product::where('category_id', $id_of_screen_category)->get();
+        $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
     
-        // Truyền biến $products đến view
         return view('user.category.banphimco', compact('products'));
     }
-    public function showbanhoc()
+    
+    public function showbanhoc(Request $request)
     {
-        // Định nghĩa ID của danh mục Màn Hình
-        $id_of_screen_category = 3; // Thay đổi giá trị này thành ID thực tế của danh mục
+        $id_of_screen_category = 3;
     
-        // Lấy sản phẩm theo category_id
-        $products = Product::where('category_id', $id_of_screen_category)->get();
+        $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
     
-        // Truyền biến $products đến view
         return view('user.category.banhoc', compact('products'));
     }
-    public function showchuotkhongday()
+    
+    public function showchuotkhongday(Request $request)
     {
-        // Định nghĩa ID của danh mục Màn Hình
-        $id_of_screen_category = 4; // Thay đổi giá trị này thành ID thực tế của danh mục
+        $id_of_screen_category = 4;
     
-        // Lấy sản phẩm theo category_id
-        $products = Product::where('category_id', $id_of_screen_category)->get();
+        $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
     
-        // Truyền biến $products đến view
         return view('user.category.chuotkhongday', compact('products'));
     }
-    public function showtranhtreotuong()
+    
+    public function showtranhtreotuong(Request $request)
     {
-        // Định nghĩa ID của danh mục Màn Hình
-        $id_of_screen_category = 5; // Thay đổi giá trị này thành ID thực tế của danh mục
+        $id_of_screen_category = 5;
     
-        // Lấy sản phẩm theo category_id
-        $products = Product::where('category_id', $id_of_screen_category)->get();
+        $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
     
-        // Truyền biến $products đến view
         return view('user.category.tranhtreotuong', compact('products'));
     }
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -105,7 +94,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         return view('admin.categories.edit', compact('category'));
     }
-
     /**
      * Update the specified resource in storage.
      */
