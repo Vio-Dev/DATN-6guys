@@ -31,9 +31,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:100',
+
+        ], [
+            'required' => ':attribute không được để trống.',
+
+        ], [
+            'name' => 'Tên danh mục',
+
+        ]);
+        $input = $request->$validatedData['name'];
         $category = Category::create($input);
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('admin.categories.index', compact('category'))
             ->with('success', 'Thêm người dùng thành công');
     }
 
