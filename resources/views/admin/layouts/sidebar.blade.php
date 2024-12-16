@@ -2,7 +2,7 @@
      <div class="sidebar-wrapper">
          <div>
              <div class="logo-wrapper logo-wrapper-center">
-                 <a href="index.html" data-bs-original-title="" title="">
+                 <a href="" data-bs-original-title="" title="">
                      <img class="img-fluid for-dark" src="{{ asset('admin/assets') }}/images/logo/logo-white.png"
                          alt="">
                  </a>
@@ -171,19 +171,8 @@
                              </a>
                          </li>
 
-                         {{-- <li class="sidebar-list">
-                             <a class="sidebar-link sidebar-title link-nav" href="forgot-password.html">
-                                 <i data-feather="key"></i>
-                                 <span>Forgot Password</span>
-                             </a>
-                         </li> --}}
 
-                         <li class="sidebar-list">
-                             <a class="sidebar-link sidebar-title link-nav" href="sign-up.html">
-                                 <i data-feather="plus-circle"></i>
-                                 <span>Register</span>
-                             </a>
-                         </li>
+                         
                      </ul>
                  </div>
                  <div class="right-arrow" id="right-arrow">

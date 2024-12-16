@@ -107,40 +107,24 @@
                         <li class="onhover-dropdown">
                             <div class="notification-box">
                                 <span class="lnr lnr-alarm"></span>
-                                <span class="badge rounded-pill badge-theme">4</span>
+                                <span class="badge rounded-pill badge-theme">
+                                    {{ is_countable($notifications) ? count($notifications) : 0 }}
+                                </span>
                             </div>
                             <ul class="notification-dropdown onhover-show-div">
                                 <li>
                                     <span class="lnr lnr-alarm"></span>
-                                    <h6 class="f-18 mb-0">Notitications</h6>
+                                    <h6 class="f-18 mb-0">Thông báo</h6>
                                 </li>
+                                @foreach($notifications as $notification)
                                 <li>
                                     <p>
-                                        <i class="fa fa-circle-o me-3 font-primary"></i>Delivery processing <span
-                                            class="pull-right">10
-                                            min.</span>
+                                        <i class="fa fa-circle-o me-3 font-primary"></i>{{ $notification->message }} <span class="pull-right">{{ $notification->created_at->diffForHumans() }}</span>
                                     </p>
                                 </li>
+                                @endforeach
                                 <li>
-                                    <p>
-                                        <i class="fa fa-circle-o me-3 font-success"></i>Order Complete<span
-                                            class="pull-right">1 hr</span>
-                                    </p>
-                                </li>
-                                <li>
-                                    <p>
-                                        <i class="fa fa-circle-o me-3 font-info"></i>Tickets Generated<span
-                                            class="pull-right">3 hr</span>
-                                    </p>
-                                </li>
-                                <li>
-                                    <p>
-                                        <i class="fa fa-circle-o me-3 font-danger"></i>Delivery Complete<span
-                                            class="pull-right">6 hr</span>
-                                    </p>
-                                </li>
-                                <li>
-                                    <a class="btn btn-primary" href="javascript:void(0)">Check all notification</a>
+                                    <a class="btn btn-primary" href="javascript:void(0)">Xem tất cả thông báo</a>
                                 </li>
                             </ul>
                         </li>
@@ -158,47 +142,27 @@
                                     <span class="lnr lnr-bubble"></span>
                                     <h6 class="f-18 mb-0">Message Box</h6>
                                 </li>
-                                <li>
-                                    <div class="media">
-                                        <img class="img-fluid rounded-circle me-3" src="{{asset('admin/assets')}}/images/user/1.jpg"
-                                            alt="user1">
-                                        <div class="status-circle online"></div>
-                                        <div class="media-body">
-                                            <span>Erica Hughes</span>
-                                            <p>Lorem Ipsum is simply dummy...</p>
+                        
+                                @foreach($notifications as $notification)
+                                    <li>
+                                        <div class="media">
+                                            <img class="img-fluid rounded-circle me-3" src="{{ asset('admin/assets/images/user/' . $notification->user->profile_image) }}" alt="user{{ $notification->user->id }}">
+                                            <div class="status-circle {{ $notification->user->status == 'online' ? 'online' : 'offline' }}"></div>
+                                            <div class="media-body">
+                                                <span>{{ $notification->user->name }}</span>
+                                                <p>{{ $notification->message }}</p>
+                                            </div>
+                                            <p class="f-12 font-success">{{ $notification->created_at->diffForHumans() }}</p>
                                         </div>
-                                        <p class="f-12 font-success">58 mins ago</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="media">
-                                        <img class="img-fluid rounded-circle me-3" src="{{asset('admin/assets')}}/images/user/2.png"
-                                            alt="user2">
-                                        <div class="status-circle online"></div>
-                                        <div class="media-body">
-                                            <span>Kori Thomas</span>
-                                            <p>Lorem Ipsum is simply dummy...</p>
-                                        </div>
-                                        <p class="f-12 font-success">1 hr ago</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="media">
-                                        <img class="img-fluid rounded-circle me-3" src="{{asset('admin/assets')}}/images/user/3.png"
-                                            alt="user3">
-                                        <div class="status-circle offline"></div>
-                                        <div class="media-body">
-                                            <span>Ain Chavez</span>
-                                            <p>Lorem Ipsum is simply dummy...</p>
-                                        </div>
-                                        <p class="f-12 font-danger">32 mins ago</p>
-                                    </div>
-                                </li>
+                                    </li>
+                                @endforeach
+                        
                                 <li class="text-center">
-                                    <a class="btn btn-primary" href="javascript:void(0)">View All</a>
+                                    <a class="btn btn-primary" href="{{ route('notifications.index') }}">View All</a>
                                 </li>
                             </ul>
                         </li>
+                        
 
                         <li class="maximize">
                             <a class="text-dark" href="javascript:void(0)!" onclick="javascript:toggleFullScreen()">
@@ -209,32 +173,27 @@
                             <div class="media profile-media">
                                 <img class="user-profile rounded-circle" src="{{asset('admin/assets')}}/images/users/4.jpg" alt="">
                                 <div class="user-name-hide media-body">
-                                    <span>Emay Walter</span>
+                                    <span>6guys</span>
                                     <p class="mb-0 font-roboto">Admin<i class="middle fa fa-angle-down"></i></p>
                                 </div>
                             </div>
                             <ul class="profile-dropdown onhover-show-div">
                                 <li>
-                                    <a href="all-users.html">
+                                    <a href={{ route('admin.user.index') }}>
                                         <i data-feather="users"></i>
                                         <span>Users</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="order-list.html">
+                                    <a href={{ route('admin.oders.list') }}>
                                         <i data-feather="archive"></i>
                                         <span>Orders</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="profile-setting.html">
-                                        <i data-feather="settings"></i>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
+                                
                                 <li>
                                     <a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        href="javascript:void(0)">
+                                        href={{ route('index') }}>
                                         <i data-feather="log-out"></i>
                                         <span>Log out</span>
                                     </a>
@@ -257,23 +216,25 @@
     </div>
     <!-- page-wrapper End-->
 
-    <!-- Modal Start -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h5 class="modal-title" id="staticBackdropLabel">Logging Out</h5>
-                    <p>Are you sure you want to log out?</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="button-box">
-                        <button type="button" class="btn btn--no " data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn  btn--yes btn-primary">Yes</button>
-                    </div>
+<!-- Modal Start -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title" id="staticBackdropLabel">Đăng Xuất</h5>
+                <p>Bạn có chắc chắn muốn đăng xuất ?</p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="button-box">
+                    <button type="button" class="btn btn--no" data-bs-dismiss="modal">Không</button>
+                    <!-- Nút 'Có' -->
+                    <button type="button" class="btn btn--yes btn-primary" onclick="window.location.href='{{ route('index') }}'">Có</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     <!-- Modal End -->
 
     <!-- latest js -->

@@ -11,64 +11,75 @@ class CartController extends Controller
     // Hiển thị giỏ hàng
     public function index()
     {
-        $cart = session()->get('cart', []);
-        $cartItemCount = count($cart); // Đếm số lượng sản phẩm trong cart
-        $totalPrice = 0;
-
+        $cart = session()->get('cart', []);  // Lấy giỏ hàng từ session
+        $cartItemCount = count($cart);  // Đếm số lượng sản phẩm trong cart
+        $totalPrice = 0;  // Khởi tạo biến tổng giá tiền
+    
         foreach ($cart as $item) {
-            $totalPrice += $item['price'] * $item['quantity'];
+            // Lấy chi tiết sản phẩm từ database dựa trên ID trong giỏ hàng
+            $product = Product::find($item['id']);
+            if ($product) {
+                // Tính giá sau khi giảm giá nếu có
+                $price = $product->price;
+                if ($product->sale) {
+                    $price = $product->price - ($product->price * ($product->sale_percentage / 100));
+                }
+                $totalPrice += $price * $item['quantity'];  // Tính tổng tiền
+            }
         }
-
+    
+        // Trả về view giỏ hàng với thông tin sản phẩm và tổng giá
         return view('user.cart', compact('cart', 'cartItemCount', 'totalPrice'));
     }
-
     // Thêm sản phẩm vào cart
     public function add(Request $request, $itemId)
-    {
-        // Lấy thông tin sản phẩm từ database 
-        $product = Product::findOrFail($itemId);
+{
+    // Lấy thông tin sản phẩm từ database
+    $product = Product::findOrFail($itemId);
 
-        // Lấy giỏ hàng từ session
-        $cart = session()->get('cart', []);
+    // Lấy giỏ hàng từ session
+    $cart = session()->get('cart', []);
 
-        // Lấy giá trị số lượng từ request
-        $quantity = $request->input('quantity', 1); // Mặc định là 1 nếu không có số lượng
+    // Lấy số lượng sản phẩm từ request
+    $quantity = $request->input('quantity', 1); // Mặc định là 1 nếu không có số lượng
 
-        // Giải mã hình ảnh nếu nó là một chuỗi JSON
-        $images = json_decode($product->image);
+    // Kiểm tra số lượng sản phẩm trong kho
+    if ($product->quantity < $quantity) {
+        return redirect()->route('cart.index')->with('error', 'Số lượng sản phẩm trong kho không đủ.');
+    }
 
-        // Lấy hình ảnh đầu tiên (hoặc sử dụng mặc định nếu không có)
-        $imagePath = is_array($images) && count($images) > 0 ? $images[0] : 'path/to/default-image.jpg';
-        // Lấy giá trị số lượng từ request
-        $quantity = $request->input('quantity', 1); // Mặc định là 1 nếu không có số lượng
-        // Kiểm tra số lượng sản phẩm trong kho
-        if ($product->quantity < $quantity) {
+    // Tính giá sản phẩm sau khi giảm giá nếu có
+    $price = $product->price;
+    if ($product->sale) {
+        // Nếu có giảm giá, tính giá mới sau khi giảm
+        $price = $product->price - ($product->price * ($product->sale_percentage / 100));
+    }
+
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    if (isset($cart[$itemId])) {
+        // Kiểm tra số lượng trong giỏ hàng có vượt quá số lượng trong kho không
+        if ($product->quantity < $cart[$itemId]['quantity'] + $quantity) {
             return redirect()->route('cart.index')->with('error', 'Số lượng sản phẩm trong kho không đủ.');
         }
-
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
-        if (isset($cart[$itemId])) {
-            // Kiểm tra tổng số lượng khi cộng thêm
-            if ($product->quantity < $cart[$itemId]['quantity'] + $quantity) {
-                return redirect()->route('cart.index')->with('error', 'Số lượng sản phẩm trong kho không đủ.');
-            }
-            $cart[$itemId]['quantity'] += $quantity;
-        } else {
-            // Thêm sản phẩm mới vào giỏ hàng
-            $cart[$itemId] = [
-                'id' => $itemId,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $quantity,
-                'image' => $product->image,
-            ];
-        }
-
-        // Cập nhật giỏ hàng vào session
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        $cart[$itemId]['quantity'] += $quantity;
+    } else {
+        // Thêm sản phẩm vào giỏ hàng nếu chưa có
+        $cart[$itemId] = [
+            'id' => $itemId,
+            'name' => $product->name,
+            'price' => $price, // Sử dụng giá sau khi giảm giá nếu có
+            'quantity' => $quantity,
+            'image' => $product->image,
+        ];
     }
+
+    // Cập nhật giỏ hàng vào session
+    session()->put('cart', $cart);
+
+    return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+}
+
+
 
     // Xóa sản phẩm khỏi giỏ hàng
     public function remove($productId)

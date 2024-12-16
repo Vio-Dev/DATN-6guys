@@ -7,7 +7,7 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\ProductController;
-use App\Http\Controllers\admin\usersCcontroller;
+use App\Http\Controllers\admin\usersController;
 use App\Http\Controllers\CheckoutController;
 use App\Models\admin\Category;
 use App\Models\admin\Product;
@@ -15,15 +15,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Controllers\Admin\CouponController;
-
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\WishlistController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/{productId}', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 });
+
 
 Route::prefix('admin')->group(function () {
     Route::get('/posts', [PostController::class, 'index'])->name('admin.blog.index'); // Hiển thị danh sách bài viết
@@ -53,10 +54,10 @@ Route::get('/about', function () {
 Route::get('/', function () {
     return view('index');
 })->middleware(['auth', 'verified'])->name('index');
-
+Route::match(['put', 'patch'], '/admin/user/update/{id}', [usersController::class, 'update'])->name('profile.update');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 require __DIR__ . '/auth.php';
@@ -77,6 +78,7 @@ Route::get('/admin/addproducts', [ProductController::class, 'add'])->name('admin
 // Route::get('/admin/product/addproduct', [ProductController::class, 'add'])->name('admin.products.add');
 Route::post('/admin/products/store', [ProductController::class, 'store'])->name('admin.products.store');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductController::class, 'showAll'])->name('products.index');
 // routes/web.php
 
 
@@ -94,12 +96,12 @@ Route::delete('/admin/category/destroy/{id}', [CategoryController::class, 'destr
 Route::get('/admin/category/edit/{id}', [CategoryController::class, 'edit'])->name('admin.categories.edit');
 Route::get('/admin/category/update/{id}', [CategoryController::class, 'update'])->name('admin.categories.update');
 
-Route::get('/admin/user/list', [usersCcontroller::class, 'index'])->name('admin.user.index');
-Route::get('/admin/addusers', [usersCcontroller::class, 'add'])->name('admin.user.add');
-Route::post('/admin/addusers', [usersCcontroller::class, 'store'])->name('admin.user.store');
-Route::delete('/admin/user/{id}', [usersCcontroller::class, 'destroy'])->name('admin.user.destroy');
-Route::get('/admin/user/edit/{id}', [usersCcontroller::class, 'edit'])->name('admin.user.edit');
-Route::put('/admin/user/update/{id}', [usersCcontroller::class, 'update'])->name('admin.user.update');
+Route::get('/admin/user/list', [usersController::class, 'index'])->name('admin.user.index');
+Route::get('/admin/addusers', [usersController::class, 'add'])->name('admin.user.add');
+Route::post('/admin/addusers', [usersController::class, 'store'])->name('admin.user.store');
+Route::delete('/admin/user/{id}', [usersController::class, 'destroy'])->name('admin.user.destroy');
+Route::get('/admin/user/edit/{id}', [usersController::class, 'edit'])->name('admin.user.edit');
+Route::put('/admin/user/update/{id}', [usersController::class, 'update'])->name('admin.user.update');
 
 
 Route::get('/products/all', [HomeController::class, 'showAll'])->name('products.showall');
@@ -133,9 +135,11 @@ Route::get('/oders/list', [OrderController::class, 'list'])->name('admin.oders.l
 Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders');
+Route::get('/user/orders/{order}/return', [OrderController::class, 'showReturnForm'])->name('user.orders.return');
+Route::post('/user/orders/{order}/return', [OrderController::class, 'processReturn'])->name('user.orders.processReturn');
 Route::get('/user/orders/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders.index');
-
+Route::post('/user/orders/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('user.orders.cancel');
 // Route::get('/', function () {
 //     return view('index');
 // });
@@ -177,6 +181,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         'destroy' => 'admin.coupons.destroy',
     ]);
 });
+
+
+// Route hiển thị thông báo đổi trả
+Route::get('/notifications', [NotificationController::class, 'showReturnNotifications'])->name('notifications.index');
 
 
 

@@ -59,19 +59,22 @@ class WishlistController extends Controller
      * Xóa sản phẩm khỏi danh sách yêu thích.
      */
     public function destroy($id)
-    {
-        // Tìm sản phẩm yêu thích thuộc về người dùng hiện tại
-        $wishlist = Wishlist::where('user_id', auth()->id())
-            ->where('id', $id)
-            ->first();
+{
+    // Tìm sản phẩm yêu thích thuộc về người dùng hiện tại
+    $wishlist = Wishlist::where('user_id', auth()->id())
+                        ->where('id', $id)
+                        ->first();
 
-        if (!$wishlist) {
-            return back()->with('error', 'Sản phẩm không tồn tại trong danh sách yêu thích!');
-        }
-
-        // Xóa sản phẩm khỏi danh sách yêu thích
-        $wishlist->delete();
-
-        return back()->with('success', 'Sản phẩm đã được xóa khỏi danh sách yêu thích!');
+    if (!$wishlist) {
+        // Nếu không tìm thấy sản phẩm yêu thích
+        return back()->with('error', 'Sản phẩm không tồn tại trong danh sách yêu thích!');
     }
+
+    // Xóa sản phẩm khỏi danh sách yêu thích
+    $wishlist->delete();
+
+    // Thông báo thành công
+    return back()->with('success', 'Sản phẩm đã được xóa khỏi danh sách yêu thích!');
+}
+
 }

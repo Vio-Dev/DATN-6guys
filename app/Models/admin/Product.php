@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\OrderDetail;
 
+
 class Product extends Model
 {
     use HasFactory;
@@ -17,7 +18,9 @@ class Product extends Model
         'content',
         'image', // Lưu chuỗi JSON chứa các ảnh
         'quantity',
-        'sale_percentage', // Nếu có
+        'sale',
+        'sale_percentage' // Nếu có
+
     ];
     public $timestamps = false;
 
@@ -34,5 +37,12 @@ class Product extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'product_id');
+    }
+    public function getFinalPriceAttribute()
+    {
+        if ($this->sale && $this->sale_percentage) {
+            return $this->price - ($this->price * $this->sale_percentage / 100);
+        }
+        return $this->price;
     }
 }

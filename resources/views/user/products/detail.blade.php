@@ -1,674 +1,428 @@
 @extends('layout')
 
 @section('content')
-    {{-- <section class="sec-product-detail bg-light p-5">
-        <div class="container">
-            <div class="row">
-                <!-- Cột ảnh sản phẩm -->
-                <div class="col-md-6 col-lg-7 mb-4">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            @if ($images && (is_array($images) || is_object($images)))
-                                <!-- Ảnh lớn -->
-                                <div class="text-center mb-4">
-                                    <img src="{{ asset('storage/' . $images[0]) }}" class="img-fluid rounded"
-                                        alt="{{ $product->name }}">
+
+
+    <!-- Shop Detail Start -->
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-5 pb-5">
+                <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner border">
+                        @if ($images && (is_array($images) || is_object($images)))
+                            @foreach ($images as $index => $image)
+                                <div class="carousel-item @if ($index === 0) active @endif">
+                                    <img class="w-100 h-100" src="{{ asset('storage/' . $image) }}" alt="Image">
                                 </div>
-
-                                <!-- Ảnh nhỏ -->
-                                <div class="row">
-                                    @foreach ($images as $image)
-                                        <div class="col-4">
-                                            <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded shadow-sm"
-                                                alt="{{ $product->name }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p>Không có hình ảnh nào.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cột thông tin sản phẩm -->
-                <div class="col-md-6 col-lg-5">
-                    <div class="card border-0 shadow-sm p-4">
-                        <h2 class="card-title text-primary mb-4">{{ $product->name }}</h2>
-
-                        <!-- Giá -->
-                        <div class="mb-3">
-                            <p class="text-muted mb-1">Giá cũ:</p>
-                            <span class="text-decoration-line-through text-muted">{{ number_format($product->price) }}
-                                VND</span>
-                        </div>
-                        <div class="mb-4">
-                            <p class="text-danger fw-bold mb-1">Giá sale:</p>
-                            <span
-                                class="fs-4 text-danger">{{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }}
-                                VND</span>
-                        </div>
-
-                        <!-- Tuỳ chọn sản phẩm -->
-                        <div class="mb-4">
-                            <label for="size" class="form-label">Size</label>
-                            <select class="form-select" id="size">
-                                <option selected>Chọn kích thước</option>
-                                <option value="S">Size S</option>
-                                <option value="M">Size M</option>
-                                <option value="L">Size L</option>
-                                <option value="XL">Size XL</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label for="color" class="form-label">Màu sắc</label>
-                            <select class="form-select" id="color">
-                                <option selected>Chọn màu sắc</option>
-                                <option value="red">Đỏ</option>
-                                <option value="blue">Xanh</option>
-                                <option value="white">Trắng</option>
-                                <option value="grey">Xám</option>
-                            </select>
-                        </div>
-
-                        <!-- Số lượng và nút Thêm vào giỏ -->
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="input-group me-3" style="width: 120px;">
-                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                <input type="number" class="form-control text-center" value="1" min="1">
-                                <button class="btn btn-outline-secondary" type="button">+</button>
+                            @endforeach
+                        @else
+                            <div class="carousel-item active">
+                                <img class="w-100 h-100" src="{{ asset('img/default-placeholder.jpg') }}"
+                                    alt="Default Image">
                             </div>
-                            <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}"
-                                method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                        @endif
+                    </div>
+                    <a class="carousel-control-prev" href="#product-carousel" role="button" data-slide="prev">
+                        <i class="fa fa-2x fa-angle-left text-dark"></i>
+                    </a>
+                    <a class="carousel-control-next" href="#product-carousel" role="button" data-slide="next">
+                        <i class="fa fa-2x fa-angle-right text-dark"></i>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="col-lg-7 pb-5">
+                <h3 class="font-weight-semi-bold"> {{ $product->name }}</h3>
+                <div class="d-flex mb-3">
+                    <div class="text-primary mr-2">
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star-half-alt"></small>
+                        <small class="far fa-star"></small>
+                    </div>
+                    <small class="pt-1">(50 Reviews)</small>
+                </div>
+                {{-- <h3 class="font-weight-semi-bold mb-4">$</h3> --}}
+                @if ($product->sale)
+                    <!-- Giá cũ bị gạch ngang -->
+
+                    <h3 class="font-weight-semi-bold mb-4" style="text-decoration: line-through;">
+                        Giá: {{ number_format($product->price) }} VNĐ
+                    </h3>
+                    <!-- Giá mới sau giảm -->
+                    <h3 class="font-weight-semi-bold mb-4" style="color: #FF0000;">
+                        Giá sale: {{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }}
+                        VNĐ
+                    </h3>
+                @else
+                    <!-- Hiển thị giá bình thường nếu không có giảm giá -->
+                    <span class="mtext-106 cl2">
+                        Giá: {{ number_format($product->price) }} VNĐ
+                    </span>
+                @endif
+                <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit clita ea.
+                    Sanc invidunt ipsum et, labore clita lorem magna lorem ut. Erat lorem duo dolor no sea nonumy. Accus
+                    labore stet, est lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum kasd rebum.
+                </p>
+                {{-- <div class="d-flex mb-3">
+                            <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+                            <form>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="size-1" name="size">
+                                    <label class="custom-control-label" for="size-1">XS</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="size-2" name="size">
+                                    <label class="custom-control-label" for="size-2">S</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="size-3" name="size">
+                                    <label class="custom-control-label" for="size-3">M</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="size-4" name="size">
+                                    <label class="custom-control-label" for="size-4">L</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="size-5" name="size">
+                                    <label class="custom-control-label" for="size-5">XL</label>
+                                </div>
                             </form>
                         </div>
-
-                        <!-- Ưu đãi -->
-                        <div class="advantage-box mt-4">
-                            <h5 class="text-white">Ưu Đãi Của Shop</h5>
-                            <ul class="list-unstyled mb-0">
-                                <li>✔ Giảm giá 10% cho đơn hàng đầu tiên</li>
-                                <li>✔ Miễn phí vận chuyển cho đơn hàng từ 500.000 VND</li>
-                                <li>✔ Quà tặng kèm cho khách hàng thân thiết</li>
-                                <li>✔ Hỗ trợ trả góp 0% lãi suất khi đến tận cửa hàng</li>
-                            </ul>
+                        <div class="d-flex mb-4">
+                            <p class="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
+                            <form>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="color-1" name="color">
+                                    <label class="custom-control-label" for="color-1">Black</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="color-2" name="color">
+                                    <label class="custom-control-label" for="color-2">White</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="color-3" name="color">
+                                    <label class="custom-control-label" for="color-3">Red</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="color-4" name="color">
+                                    <label class="custom-control-label" for="color-4">Blue</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="color-5" name="color">
+                                    <label class="custom-control-label" for="color-5">Green</label>
+                                </div>
+                            </form>
+                        </div> --}}
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <div class="input-group quantity mr-3" style="width: 130px;">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary btn-minus">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control bg-secondary text-center" value="1">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary btn-plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary px-3">
+                            <i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng
+                        </button>
+                    </form>
+                </div>
+                <div class="d-flex pt-2">
+                    <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+                    <div class="d-inline-flex">
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                    <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <h4 class="mb-3">Product Description</h4>
+                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt
+                            duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur
+                            invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet
+                            rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam
+                            consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam,
+                            ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr
+                            sanctus eirmod takimata dolor ea invidunt.</p>
+                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor
+                            consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita
+                            diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed
+                            et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <h4 class="mb-3">Additional Information</h4>
+                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt
+                            duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur
+                            invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet
+                            rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam
+                            consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam,
+                            ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr
+                            sanctus eirmod takimata dolor ea invidunt.</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item px-0">
+                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item px-0">
+                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                                    </li>
+                                    <li class="list-group-item px-0">
+                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-4">1 review for "Colorful Stylish Shirt"</h4>
+                                <div class="media mb-4">
+                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1"
+                                        style="width: 45px;">
+                                    <div class="media-body">
+                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
+                                        <div class="text-primary mb-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no
+                                            at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mb-4">Leave a review</h4>
+                                <small>Your email address will not be published. Required fields are marked *</small>
+                                <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2">Your Rating * :</p>
+                                    <div class="text-primary">
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                </div>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="message">Your Review *</label>
+                                        <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Your Name *</label>
+                                        <input type="text" class="form-control" id="name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Your Email *</label>
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Mô tả sản phẩm -->
-            <!-- Mô tả sản phẩm -->
-            <div class="mt-5 p-4 border rounded" id="product-description">
-                <h3 class="text-primary mb-3">Mô Tả Sản Phẩm</h3>
-                <p id="description-text" class="text-truncate">{!! nl2br(e($product->content)) !!}</p>
-                <button id="read-more-btn" class="btn btn-link text-primary">Xem thêm</button>
-            </div>
-
         </div>
-        <!-- Mô tả sản phẩm -->
+    </div>
+    <!-- Products End -->
+    <!-- Shop Detail End -->
+    <!-- Shop Detail End -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Sản phẩm khác</span></h2>
+        </div>
 
-    </section> --}}
+        <div class="position-relative">
+            <!-- Nút chuyển sản phẩm bên trái -->
+            <a class="btn btn-sm btn-dark position-absolute"
+                style="left: 0; top: 50%; transform: translateY(-50%); z-index: 10;" href="#" id="prevBtn">
+                <i class="fa fa-chevron-left"></i>
+            </a>
 
-    <section class="sec-product-detail bg0 p-t-65 p-b-60">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-7 p-b-30">
-                    <div class="p-l-25 p-r-30 p-lr-0-lg">
-                        <div class="wrap-slick3 flex-sb flex-w">
-                            {{-- <div class="wrap-slick3-dots"></div> --}}
-                            <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
-                            <div class="slick3 gallery-lb">
-                                @if ($images && (is_array($images) || is_object($images)))
-                                    <!-- Gallery Lightbox Section (Slick Carousel) -->
-                                    <div class="slick3 gallery-lb">
-                                        @foreach ($images as $image)
-                                            <div class="item-slick3" data-thumb="{{ asset('storage/' . $image) }}">
-                                                <div class="wrap-pic-w pos-relative">
-                                                    <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}">
+            <!-- Nút chuyển sản phẩm bên phải -->
+            <a class="btn btn-sm btn-dark position-absolute"
+                style="right: 0; top: 50%; transform: translateY(-50%); z-index: 10;" href="#" id="nextBtn">
+                <i class="fa fa-chevron-right"></i>
+            </a>
 
-                                                    <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                        href="{{ asset('storage/' . $image) }}">
-                                                        <i class="fa fa-expand"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <p>Không có hình ảnh nào.</p>
+            <!-- Dưới đây là danh sách các sản phẩm hiển thị -->
+            <div class="row px-xl-5 pb-3" id="product-container">
+                @foreach ($relatedProducts as $relatedProduct)
+                    <div class="col-lg-3 col-md-6 col-sm-12 pb-1 product-card">
+                        <div class="card product-item border-0 mb-4">
+                            <!-- Hình ảnh sản phẩm -->
+                            <div
+                                class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100"
+                                    src="{{ asset('storage/' . ($relatedProduct->image ? json_decode($relatedProduct->image)[0] : 'images/default-placeholder.jpg')) }}"
+                                    alt="{{ $relatedProduct->name }}" style="height: 250px; object-fit: cover;">
+                                @if ($relatedProduct->sale_percentage)
+                                    <span class="badge bg-danger text-white position-absolute"
+                                        style="top: 10px; left: 10px; z-index: 2;">
+                                        Sale {{ $relatedProduct->sale_percentage }}%
+                                    </span>
                                 @endif
-
+                                @if ($relatedProduct->quantity == 0)
+                                    <span class="badge bg-dark text-white position-absolute"
+                                        style="top: 10px; right: 10px; z-index: 2;">
+                                        Hết hàng
+                                    </span>
+                                @endif
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-5 p-b-30">
-                    <div class="p-r-50 p-t-5 p-lr-0-lg">
-                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">
-                            {{ $product->name }}
-                        </h4>
-
-                        <span class="mtext-106 cl2">
-                            Giá:{{ number_format($product->price) }}VNĐ
-                        </span>
-                        <br>
-
-                        <span class="mtext-106 cl2" style="color: #FF0000; font-size: 1.2em;  ">
-                            Giá sale:
-                            {{ number_format($product->price - $product->price * ($product->sale_percentage / 100)) }} VND
-                        </span>
-
-
-                        <p class="stext-102 cl3 p-t-23">
-                            Màn hình Asus TUF GAMING VG249Q3A 24" Fast IPS 180Hz Gsync chuyên game.
-                        </p>
-
-                        <!--  -->
-                        <div class="p-t-33">
-                            <div class="flex-w flex-r-m p-b-10">
-                                {{-- <div class="size-203 flex-c-m respon6">
-                                    Size
-                                </div>
-
-                                <div class="size-204 respon6-next">
-                                    <div class="rs1-select2 bor8 bg0">
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
-                                            <option>Size S</option>
-                                            <option>Size M</option>
-                                            <option>Size L</option>
-                                            <option>Size XL</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
-                                </div> --}}
-                            </div>
-
-                            {{-- <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">
-                                    Color
-                                </div>
-
-                                <div class="size-204 respon6-next">
-                                    <div class="rs1-select2 bor8 bg0">
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
-                                            <option>Red</option>
-                                            <option>Blue</option>
-                                            <option>White</option>
-                                            <option>Grey</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
-                                </div> --}}
-                            </div>
-
-                            <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-204 flex-w flex-m respon6-next">
-                                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-minus"></i>
-                                        </div>
-                            
-                                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-                            
-                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-plus"></i>
-                                        </div>
-                                    </div>
-                            
-                                    <!-- Form to Add to Cart -->
-                                    <form action="{{ route('cart.add', ['itemId' => $product->id, 'quantity' => 1]) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                            Thêm vào giỏ hàng
-                                        </button>
-                                    </form>
-                            
-                                    <!-- Form to Add to Wishlist -->
-                                    <form action="{{ route('wishlist.store', ['productId' => $product->id]) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" style="margin-top: 10px;">
-                                            Thêm vào yêu thích
-                                        </button>
-                                    </form>
+                            <!-- Thông tin sản phẩm -->
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3">{{ $relatedProduct->name }}</h6>
+                                <div class="d-flex justify-content-center">
+                                    @if ($relatedProduct->sale_percentage)
+                                        <h6>{{ number_format($relatedProduct->price - $relatedProduct->price * ($relatedProduct->sale_percentage / 100), 0, ',', '.') }}
+                                            VND</h6>
+                                        <h6 class="text-muted ml-2">
+                                            <del>{{ number_format($relatedProduct->price, 0, ',', '.') }}
+                                                VND</del>
+                                        </h6>
+                                    @else
+                                        <h6>{{ number_format($relatedProduct->price, 0, ',', '.') }} VND</h6>
+                                    @endif
                                 </div>
                             </div>
-                            
-                        </div>
-
-                        <!--  -->
-                        <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                            <div class="flex-m bor9 p-r-10 m-r-11">
-                                <a href="#"
-                                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                    data-tooltip="Add to Wishlist">
-                                    <i class="zmdi zmdi-favorite"></i>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                <a href="{{ route('products.show', $relatedProduct->id) }}"
+                                    class="btn btn-sm text-dark p-0 @if ($relatedProduct->quantity == 0) disabled @endif">
+                                    <i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết
                                 </a>
+                                <form action="{{ route('wishlist.store', $relatedProduct->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm text-dark p-0">
+                                        <i class="fas fa-heart text-danger mr-1"></i>Yêu thích
+                                    </button>
+                                </form>
                             </div>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Facebook">
-                                <i class="fa fa-facebook"></i>
-                            </a>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Twitter">
-                                <i class="fa fa-twitter"></i>
-                            </a>
-
-                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                data-tooltip="Google Plus">
-                                <i class="fa fa-google-plus"></i>
-                            </a>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-
-            {{-- <div class="bor10 m-t-50 p-t-43 p-b-40">
-                <!-- Tab01 -->
-                <div class="tab01">
-                    <!-- Nav tabs -->
-                    <!-- Tab panes -->
-                    <div class="tab-content p-t-43">
-                        <!-- - -->
-                        <div class="tab-pane fade show active" id="product-description" role="tabpanel">
-                            <div class="how-pos2 p-lr-15-md">
-                                <p class="stext-102 cl6" id="description-text">
-                                    {!! nl2br(e($product->content)) !!}
-                                </p>
-                                <button id="read-more-btn" class="btn btn-link text-primary">Xem thêm</button>
-                            </div>
-                        </div>
-                        <!-- - -->
-                    </div>
-                </div>
-            </div>
-            <div class="bor10 m-t-50 p-t-43 p-b-40">
-                <div class="tab01">
-                    <div class="tab-content p-t-43">
-                        <div class="tab-pane fade show active" id="description" role="tabpanel">
-                            <div class="row">
-                                <div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
-                                    <div class="p-b-30 m-lr-15-sm">
-                                        <!-- Review -->
-                                        <div class="flex-w flex-t p-b-68">
-                                            <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                <img src="images/avatar-01.jpg" alt="AVATAR">
-                                            </div>
-
-                                            <div class="size-207">
-                                                <div class="flex-w flex-sb-m p-b-17">
-                                                    <span class="mtext-107 cl2 p-r-20">
-                                                        Ariana Grande
-                                                    </span>
-
-                                                    <span class="fs-18 cl11">
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star-half"></i>
-                                                    </span>
-                                                </div>
-
-                                                <p class="stext-102 cl6">
-                                                    Quod autem in homine praestantissimum atque optimum est, id deseruit.
-                                                    Apud ceteros autem philosophos
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Add review -->
-                                        <form class="w-full">
-                                            <h5 class="mtext-108 cl2 p-b-7">
-                                                Add a review
-                                            </h5>
-
-                                            <p class="stext-102 cl6">
-                                                Your email address will not be published. Required fields are marked *
-                                            </p>
-
-                                            <div class="flex-w flex-m p-t-50 p-b-23">
-                                                <span class="stext-102 cl3 m-r-16">
-                                                    Your Rating
-                                                </span>
-
-                                                <span class="wrap-rating fs-18 cl11 pointer">
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <input class="dis-none" type="number" name="rating">
-                                                </span>
-                                            </div>
-
-                                            <div class="row p-b-25">
-                                                <div class="col-12 p-b-5">
-                                                    <label class="stext-102 cl3" for="review">Your review</label>
-                                                    <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="name">Name</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name"
-                                                        type="text" name="name">
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="email">Email</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email"
-                                                        type="text" name="email">
-                                                </div>
-                                            </div>
-
-                                            <button
-                                                class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-            <div class="bor10 m-t-50 p-t-43 p-b-40">
-                <!-- Tab01 -->
-                <div class="tab01">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" id="productTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="product-description-tab" data-bs-toggle="tab" href="#product-description" role="tab" aria-controls="product-description" aria-selected="true">Mô Tả Sản Phẩm</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Đánh Giá</a>
-                        </li>
-                    </ul>
-            
-                    <!-- Tab panes -->
-                    <div class="tab-content p-t-43">
-                        <!-- Mô Tả Sản Phẩm -->
-                        <div class="tab-pane fade show active" id="product-description" role="tabpanel" aria-labelledby="product-description-tab">
-                            <div class="how-pos2 p-lr-15-md">
-                                <p class="stext-102 cl6" id="description-text">
-                                    {!! nl2br(e($product->content)) !!}
-                                </p>
-                                <button id="read-more-btn" class="btn btn-link text-primary">Xem thêm</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Đánh Giá -->
-                        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                            <div class="row">
-                                <div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
-                                    <div class="p-b-30 m-lr-15-sm">
-                                        <!-- Review -->
-                                        <div class="flex-w flex-t p-b-68">
-                                            <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                <img src="images/avatar-01.jpg" alt="AVATAR">
-                                            </div>
-                                            <div class="size-207">
-                                                <div class="flex-w flex-sb-m p-b-17">
-                                                    <span class="mtext-107 cl2 p-r-20">
-                                                        Ariana Grande
-                                                    </span>
-                                                    <span class="fs-18 cl11">
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star-half"></i>
-                                                    </span>
-                                                </div>
-                                                <p class="stext-102 cl6">
-                                                    Quod autem in homine praestantissimum atque optimum est, id deseruit.
-                                                    Apud ceteros autem philosophos
-                                                </p>
-                                            </div>
-                                        </div>
-            
-                                        <!-- Add review -->
-                                        <form class="w-full">
-                                            <h5 class="mtext-108 cl2 p-b-7">
-                                                Add a review
-                                            </h5>
-            
-                                            <p class="stext-102 cl6">
-                                                Your email address will not be published. Required fields are marked *
-                                            </p>
-            
-                                            <div class="flex-w flex-m p-t-50 p-b-23">
-                                                <span class="stext-102 cl3 m-r-16">
-                                                    Your Rating
-                                                </span>
-            
-                                                <span class="wrap-rating fs-18 cl11 pointer">
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <input class="dis-none" type="number" name="rating">
-                                                </span>
-                                            </div>
-            
-                                            <div class="row p-b-25">
-                                                <div class="col-12 p-b-5">
-                                                    <label class="stext-102 cl3" for="review">Your review</label>
-                                                    <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
-                                                </div>
-            
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="name">Name</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name" type="text" name="name">
-                                                </div>
-            
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="email">Email</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email" type="text" name="email">
-                                                </div>
-                                            </div>
-            
-                                            <button class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Include Bootstrap JS -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
-            
         </div>
-        <style>
-            .advantage-box {
-                background-color: #FF0000;
-                border: 2px solid black;
-                padding: 1rem;
-                border-radius: 0.5rem;
-                color: white;
-            }
+    </div>
 
-            #description-text {
-                max-height: 150px;
-                /* Set the maximum height for truncation */
-                overflow: hidden;
-                /* Hide the overflow text */
-                text-overflow: ellipsis;
-                /* Display "..." at the end */
-                display: -webkit-box;
-                /* For Safari */
-                -webkit-line-clamp: 5;
-                /* Number of lines to show before truncation */
-                -webkit-box-orient: vertical;
-                /* Set vertical orientation for the box model */
-            }
-
-            #read-more-btn {
-                background: none;
-                border: none;
-                color: #007bff;
-                text-decoration: underline;
-                cursor: pointer;
-            }
-        </style>
-        <!-- Related Products -->
-
-        <section class="sec-product bg0 p-t-100 p-b-50">
-            <div class="p-b-32">
-				<h3 class="ltext-105 cl5 txt-center respon1">
-					Sản khác
-				</h3>
-			</div>
-            <div class="container">
-                <!-- Tab01 -->
-                <div class="tab01">
-                    <!-- Tab panes -->
-                    <div class="tab-content p-t-50">
-                        <!-- - -->
-                        <div class="tab-pane fade show active" id="best-seller" role="tabpanel">
-                            <!-- Slide2 -->
-                            <div class="wrap-slick2">
-                                <div class="slick2">
-                                    @foreach ($relatedProducts as $relatedProduct)
-                                        <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
-                                            <!-- Block2 -->
-                                            <div
-                                                class="product-wrapper @if ($relatedProduct->quantity == 0) out-of-stock @endif">
-                                                <div class="block2 position-relative">
-                                                    <!-- Nhãn Sale -->
-                                                    @if ($relatedProduct->sale)
-                                                        <span
-                                                            class="badge bg-danger position-absolute top-0 start-0">Sale</span>
-                                                    @endif
-
-                                                    <!-- Nhãn Hết hàng -->
-                                                    @if ($relatedProduct->quantity == 0)
-                                                        <span class="badge bg-secondary position-absolute top-0 end-0">Hết
-                                                            hàng</span>
-                                                    @endif
-
-                                                    <!-- Hình ảnh sản phẩm -->
-                                                    <div class="block2-pic hov-img0">
-                                                        @php
-                                                            $images = $relatedProduct->image
-                                                                ? json_decode($relatedProduct->image)
-                                                                : [];
-                                                        @endphp
-                                                        @if (!empty($images) && (is_array($images) || is_object($images)))
-                                                            <img src="{{ asset('storage/' . $images[0]) }}"
-                                                                alt="{{ $relatedProduct->name }}" class="img-fluid"
-                                                                style="height: 200px; object-fit: cover;">
-                                                        @else
-                                                            <img src="{{ asset('images/default-placeholder.jpg') }}"
-                                                                alt="No Image" class="img-fluid"
-                                                                style="height: 200px; object-fit: cover;">
-                                                        @endif
-
-                                                        <!-- Nút "Quick View" -->
-                                                        <a href="{{ route('products.show', $relatedProduct->id) }}"
-                                                            class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                                                            Xem nhanh
-                                                        </a>
-                                                    </div>
-
-                                                    <!-- Thông tin sản phẩm -->
-                                                    <div class="block2-txt flex-w flex-t p-t-14">
-                                                        <div class="block2-txt-child1 flex-col-l">
-                                                            <a href="{{ route('products.show', $relatedProduct->id) }}"
-                                                                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                                                                {{ $relatedProduct->name }}
-                                                            </a>
-                                                            @if ($relatedProduct->sale_percentage)
-                                                                <span
-                                                                    class="stext-105 cl3 text-muted text-decoration-line-through">
-                                                                    {{ number_format($relatedProduct->price, 0, ',', '.') }}
-                                                                    VND
-                                                                </span>
-                                                                <span class="stext-105 cl3 text-danger fw-bold">
-                                                                    {{ number_format($relatedProduct->price - $$relatedProduct->price * ($relatedProduct->sale_percentage / 100), 0, ',', '.') }}
-                                                                    VND
-                                                                </span>
-                                                            @else
-                                                                <span class="stext-105 cl3">
-                                                                    {{ number_format($relatedProduct->price, 0, ',', '.') }}
-                                                                    VND
-                                                                </span>
-                                                            @endif
-                                                        </div>
-
-                                                        <!-- Nút yêu thích -->
-                                                        <div class="block2-txt-child2 flex-r p-t-3">
-                                                            <a href="#"
-                                                                class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                                                <img class="icon-heart1 dis-block trans-04"
-                                                                    src="{{ asset('images/icons/icon-heart-01.png') }}"
-                                                                    alt="ICON">
-                                                                <img class="icon-heart2 dis-block trans-04 ab-t-l"
-                                                                    src="{{ asset('images/icons/icon-heart-02.png') }}"
-                                                                    alt="ICON">
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </section>
-
-
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="{{ asset('js/scripts.js') }}">
-        $(document).ready(function() {
-            $('.slick3').slick({
-                dots: true,
-                arrows: true,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1
+    < <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ asset('js/scripts.js') }}">
+            $(document).ready(function() {
+                $('.slick3').slick({
+                    dots: true,
+                    arrows: true,
+                    infinite: true,
+                    speed: 500,
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                });
             });
+        </script>
+        <script>
+            document.getElementById('read-more-btn').addEventListener('click', function() {
+                var descriptionText = document.getElementById('description-text');
+                var readMoreBtn = document.getElementById('read-more-btn');
+
+                // Check if the description is truncated
+                if (descriptionText.style.maxHeight === 'none') {
+                    descriptionText.style.maxHeight = '150px'; // Reset the height to truncate
+                    readMoreBtn.innerText = 'Xem thêm'; // Change button text to "Read more"
+                } else {
+                    descriptionText.style.maxHeight = 'none'; // Remove the height limit to show full text
+                    readMoreBtn.innerText = 'Ẩn bớt'; // Change button text to "Show less"
+                }
+            });
+            
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const productContainer = document.getElementById('product-container');
+    const itemsPerPage = 4; // Hiện 4 sản phẩm mỗi lần.
+    let currentIndex = 0;
+
+    function showItems() {
+        const products = document.querySelectorAll('.product-card');
+        products.forEach((item, index) => {
+            item.style.display = (index >= currentIndex && index < currentIndex + itemsPerPage) ? 'block' : 'none';
         });
-    </script>
-    <script>
-        document.getElementById('read-more-btn').addEventListener('click', function() {
-            var descriptionText = document.getElementById('description-text');
-            var readMoreBtn = document.getElementById('read-more-btn');
+    }
 
-            // Check if the description is truncated
-            if (descriptionText.style.maxHeight === 'none') {
-                descriptionText.style.maxHeight = '150px'; // Reset the height to truncate
-                readMoreBtn.innerText = 'Xem thêm'; // Change button text to "Read more"
-            } else {
-                descriptionText.style.maxHeight = 'none'; // Remove the height limit to show full text
-                readMoreBtn.innerText = 'Ẩn bớt'; // Change button text to "Show less"
-            }
-        });
-    </script>
+    showItems(); // Hiện các sản phẩm ban đầu
 
+    nextBtn.addEventListener('click', function () {
+        const products = document.querySelectorAll('.product-card');
+        if (currentIndex + itemsPerPage < products.length) {
+            currentIndex += itemsPerPage;
+            showItems();
+        }
+    });
 
+    prevBtn.addEventListener('click', function () {
+        if (currentIndex - itemsPerPage >= 0) {
+            currentIndex -= itemsPerPage;
+            showItems();
+        }
+    });
+});
 
-    </body>
-@endsection
+        </script>
+    @endsection
