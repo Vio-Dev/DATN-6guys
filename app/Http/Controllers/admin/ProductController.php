@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Category;
-use App\Models\admin\Product;
+use App\Models\Admin\Category;
+use App\Models\Admin\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -33,22 +33,41 @@ class ProductController extends Controller
     }
     public function store(Request $request)
     {
+        // Validate dữ liệu
         $request->validate([
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'content' => 'required|string',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra định dạng ảnh
-            'sale_percentage' => 'nullable|integer|min:1|max:100',
+
+            'content' => 'required|string',
+            'image' => 'required|array|min:1', // Ít nhất 1 hình ảnh
+            'image.*' => 'mimes:jpg,jpeg,png,gif|max:2048', // Kiểm tra định dạng và dung lượng ảnh
+        ], [
+            'name.required' => 'Tên sản phẩm không được để trống.',
+            'price.required' => 'Giá sản phẩm không được để trống.',
+            'price.numeric' => 'Giá sản phẩm phải là một số hợp lệ.',
+            'quantity.required' => 'Số lượng sản phẩm không được để trống.',
+            'category_id.required' => 'Danh mục không được để trống.',
+            'category_id.exists' => 'Danh mục không hợp lệ.',
+            'content.required' => 'Mô tả sản phẩm không được để trống.',
+            'image.required' => 'Vui lòng chọn ít nhất 1 hình ảnh.',
+            'image.*.mimes' => 'Chỉ cho phép tải lên các tệp hình ảnh JPG, JPEG, PNG, GIF.',
+
         ]);
 
+        // Nếu validate thành công, thực hiện thêm sản phẩm vào cơ sở dữ liệu
         $product = new Product();
         $product->name = $request->name;
         $product->price = $request->price;
-        $product->content = $request->content;
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
+
+        $product->content = $request->content;
+
+        // Lưu hình ảnh nếu có
+        if ($request->hasFile('image')) {
+
         $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
         $product->sale_percentage = $request->input('sale_percentage') ?? null;
         if (!$request->has('sale')) {
@@ -57,16 +76,16 @@ class ProductController extends Controller
         // Lưu nhiều ảnh
         if ($request->hasfile('image')) {
             $images = [];
-            foreach ($request->file('image') as $image) {
-                $path = $image->store('products', 'public'); // Lưu ảnh vào thư mục public/storage/products
-                $images[] = $path; // Lưu đường dẫn vào mảng
+            foreach ($request->file('image') as $file) {
+                $path = $file->store('products', 'public');
+                $images[] = $path;
             }
-            $product->image = json_encode($images); // Chuyển đổi mảng thành JSON để lưu vào CSDL
+            $product->images = json_encode($images); // Lưu các đường dẫn hình ảnh dưới dạng JSON
         }
 
         $product->save();
 
-        return redirect()->route('admin.products.index')->with('success', 'Product added successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm thành công!');
     }
 
     public function show($id) // Phương thức hiển thị chi tiết sản phẩm
@@ -109,7 +128,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:100' ,
+            'name' => 'required|string|max:100',
             'price' => 'required|numeric',
             'content' => 'required|string',
             'quantity' => 'required|integer|min:1',

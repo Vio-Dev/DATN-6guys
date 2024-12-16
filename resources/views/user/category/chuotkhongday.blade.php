@@ -2,7 +2,7 @@
 @section('content')
     <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{ asset('img/banner1.jpg') }}');">
         <h2 class="ltext-105 cl0 txt-center">
-            Bàn học
+            Chuột Không Dây
         </h2>
     </section>
     <div class="container-fluid pt-5">
