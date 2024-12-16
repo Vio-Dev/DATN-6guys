@@ -60,15 +60,24 @@
                                             <span class="badge bg-danger">Đã hủy</span>
                                             @break
                                         @default
-                                            <span class="badge bg-warning text-dark">Đang đổi trả </span>
+                                            <span class="badge bg-warning text-dark">Đang đổi trả</span>
                                     @endswitch
                                 </td>
+                                <td>
+                                    @if($order->status === 'pending') <!-- Kiểm tra trạng thái đơn hàng -->
+                                        <form action="{{ route('orders.cancel', $order->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">Hủy đơn hàng</button>
+                                        </form>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" disabled>Không thể hủy</button>
+                                    @endif
+                                </td>
+  
 
                                 <!-- Hành động -->
                                 <td>
-                                    <a href="{{ route('user.orders.show', $order->id) }}" class="btn btn-info btn-sm mb-1">
-                                        Xem chi tiết
-                                    </a>
+                                    
                                     @if ($order->status === 'pending')
                                     @elseif ($order->status === 'delivered')
                                     <a href="{{ route('user.orders.return', $order->id) }}" class="btn btn-warning btn-sm">

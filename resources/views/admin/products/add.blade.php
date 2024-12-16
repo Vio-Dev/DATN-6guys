@@ -23,10 +23,10 @@
                                 <div class="mb-4 row align-items-center">
                                     <label class="form-label-title col-sm-2 mb-0">Tên Sản Phẩm</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control @error('name') is-invalid @enderror" type="text" name="name" placeholder="Tên Sản Phẩm" value="{{ old('name') }}" required>
+                                        <input type="text" id="name" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror">
                                         @error('name')
-                                            <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
                                     </div>
                                 </div>
 

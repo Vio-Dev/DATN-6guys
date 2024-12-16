@@ -62,23 +62,41 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Đơn hàng đã được xóa thành công.');
     }
-    public function cancelOrder(Request $request, $id)
+    public function cancel($id)
 {
-    $order = Order::where('id', $id)->where('user_id', Auth::id())->first();
+    // Tìm đơn hàng theo ID
+    $order = Order::find($id);
 
+    // Kiểm tra nếu đơn hàng không tồn tại
     if (!$order) {
-        return redirect()->back()->with('error', 'Đơn hàng không tồn tại hoặc bạn không có quyền hủy đơn hàng này.');
+        return redirect()->back()->with('error', 'Đơn hàng không tồn tại.');
     }
 
-    if ($order->status !== 'pending') {
-        return redirect()->back()->with('error', 'Đơn hàng đã được xác nhận và không thể hủy.');
+    // Kiểm tra trạng thái đơn hàng
+    if ($order->status !== 'pending') { // Trạng thái đơn hàng phải là 'pending' để hủy
+        return redirect()->back()->with('error', 'Bạn không thể hủy đơn hàng này vì nó đã được xử lý.');
     }
 
+    // Cập nhật trạng thái đơn hàng thành 'canceled' thay vì 'đã hủy'
     $order->status = 'canceled';
     $order->save();
 
-    return redirect()->route('user.orders')->with('success', 'Đơn hàng đã được hủy thành công.');
+    return redirect()->back()->with('success', 'Đơn hàng đã được hủy thành công.');
 }
+public function updateOrderStatus($id, Request $request)
+{
+    $order = Order::find($id);
+
+    if (!$order) {
+        return redirect()->back()->with('error', 'Đơn hàng không tồn tại.');
+    }
+
+    $order->status = $request->status; // Cập nhật trạng thái từ form
+    $order->save();
+
+    return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+}
+
 public function processReturn(Request $request, $orderId)
 {
     // Kiểm tra sự tồn tại của đơn hàng
