@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
+<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <div class="page-body">
         <div class="title-header">
             <h5>Danh Sách Sản Phẩm</h5>
