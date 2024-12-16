@@ -86,7 +86,7 @@ public function processReturn(Request $request, $orderId)
 
     // Kiểm tra nếu đơn hàng không phải là đã giao
     if ($order->status !== 'delivered') {
-        return redirect()->route('user.orders.index')->with('error', 'Chỉ có đơn hàng đã giao mới có thể yêu cầu đổi trả.');
+return redirect()->route('user.orders.index')->with('error', 'Chỉ có đơn hàng đã giao mới có thể yêu cầu đổi trả.');
     }
 
     // Xác thực lý do đổi trả
