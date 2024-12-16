@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Category;
-use App\Models\admin\Product;
+use App\Models\Admin\Category;
+use App\Models\Admin\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -17,7 +17,7 @@ class ProductController extends Controller
     }
     public function view()
     {
-        $products = $this->product->latest()->paginate(5);
+        $products = Product::latest()->take(6)->get();
         return view('index', compact('products'));
     }
     public function index()
@@ -40,6 +40,7 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra định dạng ảnh
+            'sale_percentage' => 'nullable|integer|min:1|max:100',
         ]);
 
         $product = new Product();
@@ -48,7 +49,11 @@ class ProductController extends Controller
         $product->content = $request->content;
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
-
+        $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
+        $product->sale_percentage = $request->input('sale_percentage') ?? null;
+        if (!$request->has('sale')) {
+            $validatedData['sale_percentage'] = null;
+        }
         // Lưu nhiều ảnh
         if ($request->hasfile('image')) {
             $images = [];
@@ -185,9 +190,10 @@ class ProductController extends Controller
             }
         }
     }
-    public function showAll()
+    public function showAll(Request $request)
     {
-        $products = Product::paginate(12); // Hiển thị 12 sản phẩm mỗi trang
+
+        $products = Product::paginate(6); // Hiển thị 12 sản phẩm mỗi trang
         return view('user.products.showall', compact('products'));
     }
 }

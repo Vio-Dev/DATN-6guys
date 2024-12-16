@@ -36,27 +36,28 @@ class PostController extends Controller
 
     // Xử lý lưu bài viết mới
     public function store(Request $request)
-    {
-        $this->validatePost($request);
+{
+    $this->validatePost($request);
 
-        // Xử lý ảnh bìa
-        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
-        
-        // Xử lý ảnh trong nội dung
-        $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content');
+    // Xử lý ảnh bìa
+    $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
+    
+    // Xử lý ảnh trong nội dung
+    $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content');
 
-        // Lưu bài viết mới vào database
-        Post::create([
-            'title' => $request->title,
-            'short_description' => $request->short_description,
-            'content' => $request->content,
-            'author' => $request->author,
-            'featured_image' => $featured_image ?: '',
-            'image_in_content' => $image_in_content ?: ''
-        ]);
+    // Lưu bài viết mới vào database
+    $post = Post::create([
+        'title' => $request->title,
+        'short_description' => $request->short_description,
+        'content' => $request->content,
+        'author' => $request->author,
+        'featured_image' => $featured_image ?: '',
+        'image_in_content' => $image_in_content ?: ''
+    ]);
 
-        return redirect()->route('admin.blog.index')->with('success', 'Bài viết đã được thêm!');
-    }
+    // Chuyển hướng về danh sách bài viết hoặc trang chi tiết bài viết
+    return redirect()->route('admin.blog.index')->with('success', 'Bài viết đã được thêm!');
+}
 
     // Hiển thị form sửa bài viết
     public function edit($id)
@@ -73,7 +74,7 @@ class PostController extends Controller
         $this->validatePost($request);
 
         // Xử lý ảnh bìa
-        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images', $post->featured_image);
+        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
         
         // Xử lý ảnh trong nội dung
         $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content', $post->image_in_content);
@@ -112,20 +113,20 @@ class PostController extends Controller
         ]);
     }
 
-    // Phương thức xử lý upload ảnh
-    private function uploadImage(Request $request, $fieldName, $folder, $default = null)
-    {
-        if ($request->hasFile($fieldName)) {
-            // Lưu file với tên duy nhất
-            $fileName = time() . '_' . $request->file($fieldName)->getClientOriginalName();
-            $filePath = $request->file($fieldName)->storeAs("public/{$folder}", $fileName);
-    
-            // Trả về đường dẫn tương đối (bỏ 'public/')
-            return str_replace('public/', '', $filePath);
-        }
-    
-        // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
-        return $default;
+// Phương thức xử lý upload ảnh
+private function uploadImage(Request $request, $fieldName, $folder, $default = null)
+{
+    if ($request->hasFile($fieldName)) {
+        // Lưu file với tên duy nhất
+        $fileName = time() . '_' . $request->file($fieldName)->getClientOriginalName();
+        $filePath = $request->file($fieldName)->storeAs("public/{$folder}", $fileName);
+        
+        // Trả về đường dẫn tương đối (bỏ 'public/')
+        return str_replace('public/', '', $filePath);
     }
+
+    // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
+    return $default;
+}
 }
 

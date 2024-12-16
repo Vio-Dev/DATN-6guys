@@ -7,7 +7,7 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\ProductController;
-use App\Http\Controllers\admin\usersCcontroller;
+use App\Http\Controllers\admin\usersController;
 use App\Http\Controllers\CheckoutController;
 use App\Models\admin\Category;
 use App\Models\admin\Product;
@@ -19,11 +19,12 @@ use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\WishlistController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/{productId}', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 });
+
 
 Route::prefix('admin')->group(function () {
     Route::get('/posts', [PostController::class, 'index'])->name('admin.blog.index'); // Hiển thị danh sách bài viết
@@ -53,7 +54,7 @@ Route::get('/about', function () {
 Route::get('/', function () {
     return view('index');
 })->middleware(['auth', 'verified'])->name('index');
-Route::match(['put', 'patch'], '/admin/user/update/{id}', [usersCcontroller::class, 'update'])->name('profile.update');
+Route::match(['put', 'patch'], '/admin/user/update/{id}', [usersController::class, 'update'])->name('profile.update');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -95,12 +96,12 @@ Route::delete('/admin/category/destroy/{id}', [CategoryController::class, 'destr
 Route::get('/admin/category/edit/{id}', [CategoryController::class, 'edit'])->name('admin.categories.edit');
 Route::get('/admin/category/update/{id}', [CategoryController::class, 'update'])->name('admin.categories.update');
 
-Route::get('/admin/user/list', [usersCcontroller::class, 'index'])->name('admin.user.index');
-Route::get('/admin/addusers', [usersCcontroller::class, 'add'])->name('admin.user.add');
-Route::post('/admin/addusers', [usersCcontroller::class, 'store'])->name('admin.user.store');
-Route::delete('/admin/user/{id}', [usersCcontroller::class, 'destroy'])->name('admin.user.destroy');
-Route::get('/admin/user/edit/{id}', [usersCcontroller::class, 'edit'])->name('admin.user.edit');
-Route::put('/admin/user/update/{id}', [usersCcontroller::class, 'update'])->name('admin.user.update');
+Route::get('/admin/user/list', [usersController::class, 'index'])->name('admin.user.index');
+Route::get('/admin/addusers', [usersController::class, 'add'])->name('admin.user.add');
+Route::post('/admin/addusers', [usersController::class, 'store'])->name('admin.user.store');
+Route::delete('/admin/user/{id}', [usersController::class, 'destroy'])->name('admin.user.destroy');
+Route::get('/admin/user/edit/{id}', [usersController::class, 'edit'])->name('admin.user.edit');
+Route::put('/admin/user/update/{id}', [usersController::class, 'update'])->name('admin.user.update');
 
 
 Route::get('/products/all', [HomeController::class, 'showAll'])->name('products.showall');
