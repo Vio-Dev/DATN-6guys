@@ -60,9 +60,15 @@ class PostController extends Controller
     // Chuyển hướng về danh sách bài viết hoặc trang chi tiết bài viết
     return redirect()->route('admin.blog.index')->with('success', 'Bài viết đã được thêm!');
 }
-
-=======
+// Hiển thị form sửa bài viết
+public function edit($id)
 {
+    $post = Post::findOrFail($id);
+    return view('admin.blog.edit', compact('post'));
+}
+public function update(Request $request, $id)
+{
+    $post = Post::findOrFail($id);
     $this->validatePost($request);
 
     // Xử lý ảnh bìa
@@ -164,20 +170,18 @@ class PostController extends Controller
 
 
 
-    // Phương thức xử lý upload ảnh
-    private function uploadImage(Request $request, $fieldName, $folder, $default = null)
-    {
-        if ($request->hasFile($fieldName)) {
-            // Lưu file với tên duy nhất
-            $fileName = time() . '_' . $request->file($fieldName)->getClientOriginalName();
-            $filePath = $request->file($fieldName)->storeAs("public/{$folder}", $fileName);
-
-            // Trả về đường dẫn tương đối (bỏ 'public/')
-            return str_replace('public/', '', $filePath);
-        }
-
-        // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
-        return $default;
+  // Phương thức validate bài viết
+  private function validatePost(Request $request)
+  {
+      $request->validate([
+          'title' => 'required|string|max:3000',
+          'short_description' => 'nullable|string|max:50000', // Mô tả ngắn
+          'content' => 'required',
+          'author' => 'required|string|max:255',
+          'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          'image_in_content' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+      ]);
+  }
 
 // Phương thức xử lý upload ảnh
 private function uploadImage(Request $request, $fieldName, $folder, $default = null)
