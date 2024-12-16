@@ -11,9 +11,10 @@ class UsersCcontroller extends Controller
 {
     public function index()
     {
-        $users = User::all();  // Sử dụng biến số nhiều
+        $users = User::orderBy('created_at', 'desc')->get();
         return view('admin.user.index', compact('users'));
     }
+
 
     public function add()
     {
@@ -26,9 +27,20 @@ class UsersCcontroller extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-
+            'password' => 'required|string|min:8',
+        ], [
+            'required' => ':attribute không được để trống',
+            'string' => ':attribute phải là một chuỗi ký tự',
+            'max' => ':attribute không được vượt quá :max ký tự',
+            'email' => ':attribute phải là một địa chỉ email hợp lệ',
+            'unique' => ':attribute đã tồn tại trong hệ thống',
+            'min' => ':attribute phải có ít nhất :min ký tự',
+        ], [
+            'name' => 'Tên người dùng',
+            'email' => 'Email',
+            'password' => 'Mật khẩu',
         ]);
+
 
         // Mã hóa mật khẩu và tạo người dùng mới
         $validatedData['password'] = Hash::make($validatedData['password']);
@@ -60,21 +72,36 @@ class UsersCcontroller extends Controller
 
         // Xác thực dữ liệu
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed', // Nếu mật khẩu được nhập
+            'name' => 'required|string|max:255',  // Tên người dùng không được trống, là chuỗi và có độ dài tối đa 255 ký tự
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,  // Email không được trống, đúng định dạng và không trùng lặp với email hiện tại
+            'password' => 'nullable|string|min:8',  // Mật khẩu có thể không có giá trị, nếu có thì phải là chuỗi, ít nhất 8 ký tự
+        ], [
+            'required' => ':attribute không được để trống',  // Thông báo khi trường không được điền
+            'string' => ':attribute phải là một chuỗi ký tự',  // Thông báo khi trường không phải là chuỗi
+            'max' => ':attribute không được vượt quá :max ký tự',  // Thông báo khi trường vượt quá giới hạn ký tự
+            'email' => ':attribute phải là một địa chỉ email hợp lệ',  // Thông báo khi email không hợp lệ
+            'unique' => ':attribute đã tồn tại trong hệ thống',  // Thông báo khi email đã tồn tại
+            'min' => ':attribute phải có ít nhất :min ký tự',  // Thông báo khi mật khẩu có ít ký tự
+        ], [
+            'name' => 'Tên người dùng',  // Tên trường hiển thị khi thông báo lỗi
+            'email' => 'Email',  // Tên trường hiển thị khi thông báo lỗi
+            'password' => 'Mật khẩu',  // Tên trường hiển thị khi thông báo lỗi
         ]);
 
-        // Kiểm tra và cập nhật mật khẩu nếu có
+
+
+
         if ($request->filled('password')) {
             $validatedData['password'] = Hash::make($request->password);
         } else {
-            unset($validatedData['password']); // Xóa password nếu không có thay đổi
+            unset($validatedData['password']);
         }
 
         $validatedData['password'] = $request->role;
-        // Cập nhật thông tin người dùng
-        $user->update($validatedData);
+        // dd($request->role);
+        // dd($user->role);
+        $user->role = $request->role;
+        $user->save();
 
         return redirect()->route('admin.user.index')->with('success', 'Cập nhật người dùng thành công!');
     }

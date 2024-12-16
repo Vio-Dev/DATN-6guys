@@ -70,7 +70,7 @@
                                                     </div>
 
                                                     <!-- Xác Nhận Mật Khẩu -->
-                                                    <div class="mb-4 row align-items-center">
+                                                    {{-- <div class="mb-4 row align-items-center">
                                                         <label class="col-lg-2 col-md-3 col-form-label form-label-title">Xác Nhận Mật Khẩu</label>
                                                         <div class="col-md-9 col-lg-10">
                                                             <input class="form-control @error('password_confirmation') is-invalid @enderror" 
@@ -79,7 +79,7 @@
                                                                 <div class="invalid-feedback">{{ $message }}</div>
                                                             @enderror
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Vị Trí -->
                                                     <div class="col-md-9 col-lg-10">
