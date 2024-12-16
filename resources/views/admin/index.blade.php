@@ -31,7 +31,7 @@
                         <div class="custome-2-bg b-r-4 card-body">
                             <div class="media static-top-widget">
                                 <div class="media-body p-0">
-                                    <span class="m-0">Tổng số đặt chỗ</span>
+                                    <span class="m-0">Tổng số đặt hàng</span>
                                     <h4 class="mb-0 counter">9856
                                         <span class="badge badge-light-danger grow">
                                             <i data-feather="trending-down"></i>8.5%</span>
