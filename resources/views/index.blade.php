@@ -283,6 +283,39 @@
 
 <!-- Products End -->
 
+
+    <section class="sec-blog bg0 p-t-60 p-b-90">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="section-title px-5"><span class="px-2">Bài viết</span></h2>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 col-md-4 p-b-40">
+                  <section class="sec-blog bg0 p-t-60 p-b-90">
+                    <div class="container">
+                      <div class="row">
+                        @foreach($posts as $post)
+                          <div class="col-sm-6 col-md-4 p-b-40">
+                            <div class="p-b-63">
+                              <a href="{{ route('user.blog.show', $post->id) }}" class="hov-img0 how-pos5-parent">
+                                <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}" alt="IMG-BLOG">
+                              </a>
+                              <div class="post-item">
+                                <h2>{{ $post->title }}</h2>
+                                <p class="post-date">Ngày đăng {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        @endforeach
+                      </div>
+            </div>             
+
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
 <section class="sec-blog bg0 py-5">
     <div class="container">
         <div class="text-center mb-4">
@@ -310,11 +343,13 @@
                 </div>
             @endforeach
         </div>
+
     </div>
 </section>
 
 
   
+
     <style>
         .sale-badge {
             position: absolute;
@@ -399,6 +434,7 @@
             margin-top: 5px;
         }
     </style>
+
     <style>
 
         .card {
