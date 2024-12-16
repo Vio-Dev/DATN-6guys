@@ -14,6 +14,7 @@
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="{{asset('admin/assets')}}/images/favicon.png" type="image/x-icon">
     <link rel="shortcut icon" href="{{asset('admin/assets')}}/images/favicon.png" type="image/x-icon">
+    
     <title>6Guys- Dashboard</title>
 
     <!-- Google font-->
@@ -23,7 +24,7 @@
 
     <!-- Linear Icon css -->
     <link rel="stylesheet" href="{{asset('admin/assets')}}/css/linearicon.css">
-
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <!-- fontawesome css -->
     <link rel="stylesheet" type="text/css" href="{{asset('admin/assets')}}/css/vendors/font-awesome.css">
 
