@@ -32,49 +32,66 @@
                                                 </div>
 
                                                 <div class="row">
+                                                    <!-- Tên Người Dùng -->
                                                     <div class="mb-4 row align-items-center">
-                                                        <label class="form-label-title col-lg-2 col-md-3 mb-0">
-                                                            Tên Người Dùng</label>
+                                                        <label class="form-label-title col-lg-2 col-md-3 mb-0">Tên Người
+                                                            Dùng</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="text"
-                                                                value={{ $user->name }} name="name">
+                                                            <input class="form-control " type="text" name="name"
+                                                                value="{{ old('name', $user->name) }}">
+                                                            @error('name')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
+                                                    <!-- Email Người Dùng -->
                                                     <div class="mb-4 row align-items-center">
-                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">
-                                                            Email Người Dùng</label>
+                                                        <label
+                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">Email
+                                                            Người Dùng</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <input class="form-control" type="email" name="email"
-                                                                value={{ $user->email }}>
+                                                            <input class="form-control " type="email" name="email"
+                                                                value="{{ old('email', $user->email) }}">
+                                                            @error('email')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
                                                     </div>
 
+                                                    <!-- Mật Khẩu -->
                                                     <div class="mb-4 row align-items-center">
-                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mật Khẩu</label>
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mật
+                                                            Khẩu</label>
                                                         <div class="col-md-9 col-lg-10">
-                                                            <!-- Input mật khẩu, không hiển thị giá trị cũ, chỉ placeholder nếu muốn thay đổi -->
-                                                            <input class="form-control" type="password" name="password" placeholder="Nhập mật khẩu mới (nếu muốn thay đổi)">
+                                                            <input class="form-control " type="password" name="password"
+                                                                placeholder="Nhập mật khẩu mới (nếu muốn thay đổi)">
+                                                            @error('password')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-9 col-lg-10">
-                                                        <div class="form-group">
-                                                            <label>Vị Trí</label>
-                                                            <select class="form-select" name="role"
-                                                                value={{ $user->name }}>
-                                                                <option value="user">Người Dùng</option>
-                                                                <option value="admin">Quản Trị Viên</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <input type="submit" value="cập nhật">
                                                     </div>
                                                 </div>
-                                            </form>
-                                        </div>
 
+                                                <div class="mb-4 row align-items-center">
+                                                    <label class="col-lg-2 col-md-3 col-form-label form-label-title">Vị
+                                                        Trí</label>
+                                                    <div class="col-md-9 col-lg-10">
+                                                        <select class="form-select" name="role">
+                                                            <option value="user">Người Dùng</option>
+                                                            <option value="admin">Quản Trị Viên</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 col-lg-10">
+
+
+                                                    <input class = "btn btn-primary mt-1" type="submit" value="cập nhật">
+                                                </div>
+                                        </div>
+                                        </form>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -82,18 +99,19 @@
                 </div>
             </div>
         </div>
-        <!-- New User End -->
+    </div>
+    <!-- New User End -->
 
-        <!-- footer start -->
-        <div class="container-fluid">
-            <footer class="footer">
-                <div class="row">
-                    <div class="col-md-12 footer-copyright text-center">
-                        <p class="mb-0">Copyright 2024 sixguy</p>
-                    </div>
+    <!-- footer start -->
+    <div class="container-fluid">
+        <footer class="footer">
+            <div class="row">
+                <div class="col-md-12 footer-copyright text-center">
+                    <p class="mb-0">Copyright 2024 sixguy</p>
                 </div>
-            </footer>
-        </div>
-        <!-- footer end -->
+            </div>
+        </footer>
+    </div>
+    <!-- footer end -->
     </div>
 @endsection

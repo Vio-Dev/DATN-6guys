@@ -34,7 +34,7 @@ class CategoryController extends Controller
         $input = $request->all();
         $category = Category::create($input);
         return redirect()->route('admin.categories.index')
-            ->with('success', 'User has been created successfully!');
+            ->with('success', 'Thêm người dùng thành công');
     }
 
     /**
@@ -43,49 +43,49 @@ class CategoryController extends Controller
     public function showManhinh(Request $request)
     {
         $id_of_screen_category = 2; // Thay đổi giá trị này thành ID thực tế của danh mục
-    
+
         // Lấy sản phẩm theo category_id và phân trang với 10 sản phẩm mỗi trang
         $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
-    
+
         return view('user.category.manhinh', compact('products'));
     }
-    
+
     public function showbanphimco(Request $request)
     {
         $id_of_screen_category = 1;
-    
+
         $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
-    
+
         return view('user.category.banphimco', compact('products'));
     }
-    
+
     public function showbanhoc(Request $request)
     {
         $id_of_screen_category = 3;
-    
+
         $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
-    
+
         return view('user.category.banhoc', compact('products'));
     }
-    
+
     public function showchuotkhongday(Request $request)
     {
         $id_of_screen_category = 4;
-    
+
         $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
-    
+
         return view('user.category.chuotkhongday', compact('products'));
     }
-    
+
     public function showtranhtreotuong(Request $request)
     {
         $id_of_screen_category = 5;
-    
+
         $products = Product::where('category_id', $id_of_screen_category)->paginate(6);
-    
+
         return view('user.category.tranhtreotuong', compact('products'));
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      */

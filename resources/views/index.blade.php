@@ -283,6 +283,9 @@
 
 <!-- Products End -->
 
+
+    
+
 <section class="sec-blog bg0 py-5">
     <div class="container">
         <div class="text-center mb-4">
@@ -297,8 +300,12 @@
                             <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}"
                                  class="card-img-top" alt="Bài viết">
                         </a>
+                        
                         <div class="card-body">
                             <h5 class="card-title">{{ $post->short_description }}</h5>
+                            <a>
+                                <h6 class="card-title"> Tác Giả: {{ $post->author }}</h6>
+                            </a>
                             <p class="card-text text-muted">
                                 Ngày đăng: {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}
                             </p>
@@ -310,11 +317,13 @@
                 </div>
             @endforeach
         </div>
+
     </div>
 </section>
 
 
   
+
     <style>
         .sale-badge {
             position: absolute;
@@ -399,6 +408,7 @@
             margin-top: 5px;
         }
     </style>
+
     <style>
 
         .card {
