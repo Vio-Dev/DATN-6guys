@@ -7,15 +7,12 @@
             <div class="title-header">
                 <h5>Thêm Bài Viết</h5>
             </div>
-
             <div class="row">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
-                                <div class="card-header-2">
-                                    <h5>Thông Tin Bài Viết</h5>
-                                </div>
+                               
                                 <div class="card-body">
                                     <form action="{{ route('admin.blog.store') }}" method="POST"
                                         enctype="multipart/form-data" class="theme-form theme-form-2 mega-form">

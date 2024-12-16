@@ -1,6 +1,5 @@
 @extends('layout')
 @section('content')
-
     <section class="section-slide">
         <div class="wrap-slick1 rs1-slick1">
             <div class="slick1">
@@ -15,7 +14,7 @@
                             </div>
 
                             <div class="layer-slick1 animated visible-false" data-appear="fadeInRight" data-delay="800">
-                                <h2 class="ltext-104 cl2 p-t-19 p-b-43 respon1" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
+                                <h2 class="mb-4 font-weight-semi-bold" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
                                     Chuột Gaming Chính Hãng
                                 </h2>
                             </div>
@@ -41,7 +40,7 @@
                             </div>
 
                             <div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="800">
-                                <h2 class="ltext-104 cl2 p-t-19 p-b-43 respon1" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
+                                <h2 class="mb-4 font-weight-semi-bold" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
                                     Thiết Kế Đỉnh Cao
                                 </h2>
                             </div>
@@ -66,7 +65,7 @@
                             </div>
                             
                             <div class="layer-slick1 animated visible-false" data-appear="bounceInRight" data-delay="0">
-                                <h2 class="ltext-104 cl2 p-t-19 p-b-43 respon1" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
+                                <h2 class="mb-4 font-weight-semi-bold" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size:40px;">
                                     Trải Nghiệm Tốc Độ Và Chính Xác
                                 </h2>
                             </div>
@@ -87,78 +86,54 @@
 
     <div class="sec-banner bg0">
         <div class="flex-w flex-c-m">
-            <div class="size-202 m-lr-auto respon4">
-                <!-- Block1 -->
-                <div class="block1 wrap-pic-w">
-                    <img src="{{ asset('img/banphim.jpg') }}" alt="IMG-BANNER">
-
-                    <a href="{{ route('category.banphimco') }}"
-                        class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-                        <div class="block1-txt-child1 flex-col-l">
-                            <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-                                Bàn phím
-                            </span>
-
-
-                        </div>
-
-                        <div class="block1-txt-child2 p-b-4 trans-05">
-                            <div class="block1-link stext-101 cl0 trans-09">
-                                Mua ngay
-                            </div>
-                        </div>
-                    </a>
-                </div>
+            
+        <!-- Bàn phím -->
+        <div class="size-202 m-lr-auto respon4">
+            <div class="block1 wrap-pic-w">
+                <img src="{{ asset('img/banphim.jpg') }}" alt="IMG-BANNER">
+                <a href="{{ route('category.banphimco') }}"
+                    class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                    <div class="block1-txt-child1 flex-col-l">
+                        <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white;">
+                            Bàn phím
+                        </span>
+                    </div>
+                </a>
             </div>
-
-            <div class="size-202 m-lr-auto respon4">
-                <!-- Block1 -->
-                <div class="block1 wrap-pic-w">
-                    <img src="{{ asset('img/e.png') }}" alt="IMG-BANNER">
-
-                    <a href="{{ route('category.chuotkhongday') }}"
-                        class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-                        <div class="block1-txt-child1 flex-col-l">
-                            <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-                                Chuột
-                            </span>
-
-                        </div>
-
-                        <div class="block1-txt-child2 p-b-4 trans-05">
-                            <div class="block1-link stext-101 cl0 trans-09">
-                                Mua ngay
-                            </div>
-                        </div>
-                    </a>
-                </div>
+        </div>
+        <!-- Chuột không dây -->
+        <div class="size-202 m-lr-auto respon4">
+            <div class="block1 wrap-pic-w">
+                <img src="{{ asset('img/e.png') }}" alt="IMG-BANNER">
+                <a href="{{ route('category.chuotkhongday') }}"
+                    class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                    <div class="block1-txt-child1 flex-col-l">
+                        <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white; ">
+                            Chuột
+                        </span>
+                    </div>
+                 
+                </a>
             </div>
-
-            <div class="size-202 m-lr-auto respon4">
-                <!-- Block1 -->
-                <div class="block1 wrap-pic-w">
-                    <img src="{{ asset('img/man.jpg') }}" alt="IMG-BANNER">
-
-                    <a href="{{ route('category.manhinh') }}"
-                        class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-                        <div class="block1-txt-child1 flex-col-l">
-                            <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-                                Màn hình
-                            </span>
-
-
-                        </div>
-
-                        <div class="block1-txt-child2 p-b-4 trans-05">
-                            <div class="block1-link stext-101 cl0 trans-09">
-                                Mua ngay
-                            </div>
-                        </div>
-                    </a>
-                </div>
+        </div>
+    
+        <!-- Màn hình -->
+        <div class="size-202 m-lr-auto respon4">
+            <div class="block1 wrap-pic-w">
+                <img src="{{ asset('img/man.jpg') }}" alt="IMG-BANNER">
+                <a href="{{ route('category.manhinh') }}"
+                    class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                    <div class="block1-txt-child1 flex-col-l">
+                        <span class="block1-name ltext-102 trans-04 p-b-8" style="color: white; ">
+                            Màn hình
+                        </span>
+                    </div>
+                
+                </a>
             </div>
         </div>
     </div>
+    
         <!-- Product -->
 {{-- <section class="sec-product bg0 p-t-100 p-b-50">
     <div class="container">
@@ -308,37 +283,36 @@
 
 <!-- Products End -->
 
-    <section class="sec-blog bg0 p-t-60 p-b-90">
-        <div class="container">
-            <div class="text-center mb-4">
-                <h2 class="section-title px-5"><span class="px-2">Bài viết</span></h2>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6 col-md-4 p-b-40">
-                  <section class="sec-blog bg0 p-t-60 p-b-90">
-                    <div class="container">
-                      <div class="row">
-                        @foreach($posts as $post)
-                          <div class="col-sm-6 col-md-4 p-b-40">
-                            <div class="p-b-63">
-                              <a href="{{ route('user.blog.show', $post->id) }}" class="hov-img0 how-pos5-parent">
-                                <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}" alt="IMG-BLOG">
-                              </a>
-                              <div class="post-item">
-                                <h2>{{ $post->title }}</h2>
-                                <p class="post-date">Ngày đăng {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</p>
-                              </div>
-                            </div>
-                          </div>
-                        @endforeach
-                      </div>
-                    </div>
-                  </section>
-                </div>
-              </div>
+<section class="sec-blog bg0 py-5">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Bài viết</span></h2>
         </div>
-    </section>
+  
+      <div class="row">
+        @foreach($posts as $post)
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card h-100 shadow-sm">
+              <a href="{{ route('user.blog.show', $post->id) }}">
+                <img src="{{ asset('storage/' . str_replace('public/', '', $post->featured_image)) }}"
+                     class="card-img-top" alt="Bài viết">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">{{ $post->short_description }}</h5>
+                <p class="card-text text-muted">
+                  Ngày đăng: {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}
+                </p>
+              </div>
+              <div class="card-footer text-center">
+                <a href="{{ route('user.blog.show', $post->id) }}" class="btn btn-primary btn-sm">Đọc Thêm</a>
+              </div>             
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+  
     <style>
         .sale-badge {
             position: absolute;
@@ -423,6 +397,12 @@
             margin-top: 5px;
         }
     </style>
+    <style>
+        .block1-link {
+            text-decoration: none !important;
+        }
+    </style>
+    
     <script>
         $(document).ready(function() {
             $('.slick2').slick({
