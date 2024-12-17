@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Category;
 use App\Models\Admin\Product;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -31,60 +33,43 @@ class ProductController extends Controller
         $category = Category::get(['id', 'name']);
         return view('admin.products.add', compact('category'));
     }
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        // Xác thực dữ liệu
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'content' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'category_id' => 'required|exists:categories,id',
-            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sale_percentage' => 'nullable|integer|min:1|max:100',
-        ], [
-            'required' => ':attribute không được để trống.',
-            'string' => ':attribute phải là chuỗi ký tự.',
-            'numeric' => ':attribute phải là số.',
-            'integer' => ':attribute phải là số nguyên.',
-            'min' => ':attribute phải lớn hơn hoặc bằng :min.',
-            'max' => ':attribute không được vượt quá :max.',
-            'exists' => ':attribute không hợp lệ.',
-            'image' => ':attribute phải là một tệp hình ảnh.',
-            'mimes' => ':attribute phải có định dạng: :values.',
-        ], [
-            'name' => 'Tên sản phẩm',
-            'price' => 'Giá',
-            'content' => 'Nội dung',
-            'quantity' => 'Số lượng',
-            'category_id' => 'Danh mục',
-            'image' => 'Hình ảnh',
-            'sale_percentage' => 'Phần trăm giảm giá',
-        ]);
+        try {
+            // Dữ liệu đã được validate tự động thông qua ProductRequest
+            $validatedData = $request->validated();
 
+            $product = new Product();
+            $product->name = $validatedData['name'];
+            $product->price = $validatedData['price'];
+            $product->content = $validatedData['content'];
+            $product->quantity = $validatedData['quantity'];
+            $product->category_id = $validatedData['category_id'];
+            $product->sale = $request->has('sale');
+            $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;
 
-        $product = new Product();
-        $product->name = $validatedData['name'];
-        $product->price = $validatedData['price'];
-        $product->content = $validatedData['content'];
-        $product->quantity = $validatedData['quantity'];
-        $product->category_id = $validatedData['category_id'];
-        $product->sale = $request->has('sale');
-        $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;
-
-        // Lưu nhiều ảnh
-        if ($request->hasfile('image')) {
-            $images = [];
-            foreach ($request->file('image') as $image) {
-                $path = $image->store('products', 'public');
-                $images[] = $path;
+            // Xử lý upload nhiều ảnh
+            if ($request->hasFile('image')) {
+                $images = [];
+                foreach ($request->file('image') as $image) {
+                    $path = $image->store('products', 'public');
+                    $images[] = $path;
+                }
+                $product->image = json_encode($images);
             }
-            $product->image = json_encode($images);
-        }
 
-        $product->save();
-        session()->flash('success', 'Thêm sản phẩm thành công');
-        return redirect()->route('admin.products.index', compact('product'));
+            $product->save();
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Thêm sản phẩm thành công');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Có lỗi xảy ra khi thêm sản phẩm: ' . $e->getMessage());
+        }
     }
 
 
@@ -125,49 +110,58 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('category', 'product'));
     }
 
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'content' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'category_id' => 'required|exists:categories,id',
-            'sale_percentage' => 'nullable|numeric|min:0|max:100', // Kiểm tra tỷ lệ sale
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra định dạng ảnh
-        ]);
+        try {
+            $validatedData = $request->validated();
 
-        $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->content = $request->content;
-        $product->quantity = $request->quantity;
-        $product->category_id = $request->category_id;
+            $product = Product::findOrFail($id);
+            $product->name = $validatedData['name'];
+            $product->price = $validatedData['price'];
+            $product->content = $validatedData['content'];
+            $product->quantity = $validatedData['quantity'];
+            $product->category_id = $validatedData['category_id'];
 
-        // Kiểm tra và áp dụng tỷ lệ sale
-        if ($request->has('sale')) {
-            $product->sale = 1; // Đánh dấu sản phẩm đang sale
-            $product->sale_percentage = $request->sale_percentage;
-
-            // Tính giá sau giảm
-        } else {
-            $product->sale = 0; // Không áp dụng sale
-            $product->sale_percentage = null; // Xóa tỷ lệ sale
-        }
-
-        // Lưu nhiều ảnh (nếu có)
-        if ($request->hasfile('image')) {
-            $images = [];
-            foreach ($request->file('image') as $image) {
-                $path = $image->store('products', 'public');
-                $images[] = $path;
+            // Xử lý sale
+            if ($request->has('sale')) {
+                $product->sale = true;
+                $product->sale_percentage = $validatedData['sale_percentage'];
+            } else {
+                $product->sale = false;
+                $product->sale_percentage = null;
             }
-            $product->image = json_encode($images);
+
+            // Xử lý upload ảnh mới (nếu có)
+            if ($request->hasFile('image')) {
+                // Xóa ảnh cũ
+                $oldImages = json_decode($product->image, true);
+                if ($oldImages) {
+                    foreach ($oldImages as $oldImage) {
+                        Storage::disk('public')->delete($oldImage);
+                    }
+                }
+
+                // Upload ảnh mới
+                $images = [];
+                foreach ($request->file('image') as $image) {
+                    $path = $image->store('products', 'public');
+                    $images[] = $path;
+                }
+                $product->image = json_encode($images);
+            }
+
+            $product->save();
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Cập nhật sản phẩm thành công');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Có lỗi xảy ra khi cập nhật sản phẩm: ' . $e->getMessage());
         }
-
-        $product->save();
-
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(string $id)
