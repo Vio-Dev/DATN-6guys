@@ -36,55 +36,28 @@ class PostController extends Controller
 
     // Xử lý lưu bài viết mới
     public function store(Request $request)
+    {
+        $this->validatePost($request);
 
-{
-    $this->validatePost($request);
+        // Xử lý ảnh bìa
+        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
 
-    // Xử lý ảnh bìa
-    $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
-    
-    // Xử lý ảnh trong nội dung
-    $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content');
+        // Xử lý ảnh trong nội dung
+        $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content');
 
-    // Lưu bài viết mới vào database
-    $post = Post::create([
-        'title' => $request->title,
-        'short_description' => $request->short_description,
-        'content' => $request->content,
-        'author' => $request->author,
-        'featured_image' => $featured_image ?: '',
-        'image_in_content' => $image_in_content ?: ''
-    ]);
+        // Lưu bài viết mới vào database
+        $post = Post::create([
+            'title' => $request->title,
+            'short_description' => $request->short_description,
+            'content' => $request->content,
+            'author' => $request->author,
+            'featured_image' => $featured_image ?: '',
+            'image_in_content' => $image_in_content ?: ''
+        ]);
 
-
-    // Chuyển hướng về danh sách bài viết hoặc trang chi tiết bài viết
-    return redirect()->route('admin.blog.index')->with('success', 'Bài viết đã được thêm!');
-}
-
-=======
-{
-    $this->validatePost($request);
-
-    // Xử lý ảnh bìa
-    $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
-    
-    // Xử lý ảnh trong nội dung
-    $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content');
-
-    // Lưu bài viết mới vào database
-    $post = Post::create([
-        'title' => $request->title,
-        'short_description' => $request->short_description,
-        'content' => $request->content,
-        'author' => $request->author,
-        'featured_image' => $featured_image ?: '',
-        'image_in_content' => $image_in_content ?: ''
-    ]);
-
-    // Chuyển hướng về danh sách bài viết hoặc trang chi tiết bài viết
-    return redirect()->route('admin.blog.index')->with('success', 'Bài viết đã được thêm!');
-}
-
+        // Chuyển hướng về danh sách bài viết hoặc trang chi tiết bài viết
+        return redirect()->route('admin.blog.index', compact('post'))->with('success', 'Bài viết đã được thêm!');
+    }
 
     // Hiển thị form sửa bài viết
     public function edit($id)
@@ -101,12 +74,7 @@ class PostController extends Controller
         $this->validatePost($request);
 
         // Xử lý ảnh bìa
-
-
-        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images', $post->featured_image);
-
-      
-        
+        $featured_image = $this->uploadImage($request, 'featured_image', 'featured_images');
 
         // Xử lý ảnh trong nội dung
         $image_in_content = $this->uploadImage($request, 'image_in_content', 'images_in_content', $post->image_in_content);
@@ -135,34 +103,32 @@ class PostController extends Controller
     // Phương thức validate bài viết
     private function validatePost(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:3000',  // Tiêu đề bắt buộc, là chuỗi và không vượt quá 3000 ký tự
-            'short_description' => 'nullable|string|max:50000',  // Mô tả ngắn không bắt buộc, nếu có thì phải là chuỗi và không quá 50000 ký tự
-            'content' => 'required',  // Nội dung bắt buộc
-            'author' => 'required|string|max:255',  // Tác giả bắt buộc, là chuỗi và không quá 255 ký tự
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Hình ảnh bìa không bắt buộc, phải là ảnh với định dạng jpeg, png, jpg, gif, svg và dung lượng không quá 2MB
-            'image_in_content' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Hình ảnh trong nội dung không bắt buộc, phải là ảnh với định dạng jpeg, png, jpg, gif, svg và dung lượng không quá 2MB
-            'images' => 'nullable|array',  // Các hình ảnh trong bài viết không bắt buộc, nếu có phải là mảng
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Kiểm tra từng hình ảnh trong mảng có định dạng hợp lệ
-        ], [
-            'required' => ':attribute không được để trống',  // Thông báo khi trường không được điền
-            'string' => ':attribute phải là chuỗi ký tự',  // Thông báo khi trường không phải là chuỗi
-            'max' => ':attribute không được vượt quá :max ký tự',  // Thông báo khi trường vượt quá giới hạn ký tự
-            'image' => ':attribute phải là một file hình ảnh hợp lệ',  // Thông báo khi file không phải là hình ảnh
-            'mimes' => ':attribute phải có định dạng: :values',  // Thông báo khi định dạng file không hợp lệ
-            'array' => ':attribute phải là một mảng',  // Thông báo khi trường không phải là mảng
-        ], [
-            'title' => 'Tiêu đề',  // Tên trường hiển thị khi thông báo lỗi
-            'short_description' => 'Mô tả ngắn',  // Tên trường hiển thị khi thông báo lỗi
-            'content' => 'Nội dung',  // Tên trường hiển thị khi thông báo lỗi
-            'author' => 'Tác giả',  // Tên trường hiển thị khi thông báo lỗi
-            'cover_image' => 'Hình ảnh bìa',  // Tên trường hiển thị khi thông báo lỗi
-            'image_in_content' => 'Hình ảnh trong bài viết',  // Tên trường hiển thị khi thông báo lỗi
-            'images' => 'Các hình ảnh trong bài viết',  // Tên trường hiển thị khi thông báo lỗi
-        ]);
+        $request->validate(
+            [
+                'title' => 'required|string|max:3000',
+                'short_description' => 'nullable|string|max:50000', // Mô tả ngắn
+                'content' => 'required',
+                'author' => 'required|string|max:255',
+                'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image_in_content' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ],
+            [
+                'required' => ':attribute không được để trống.',
+                'string' => ':attribute phải là chuỗi ký tự.',
+                'max' => ':attribute không được vượt quá :max ký tự.',
+                'image' => ':attribute phải là một tệp hình ảnh.',
+                'mimes' => ':attribute phải có định dạng: :values.',
+            ],
+            [
+                'title' => 'Tiêu đề',
+                'short_description' => 'Mô tả ngắn',
+                'content' => 'Nội dung',
+                'author' => 'Tác giả',
+                'featured_image' => 'Hình ảnh nổi bật',
+                'image_in_content' => 'Hình ảnh trong nội dung',
+            ]
+        );
     }
-
-
 
     // Phương thức xử lý upload ảnh
     private function uploadImage(Request $request, $fieldName, $folder, $default = null)
@@ -178,29 +144,5 @@ class PostController extends Controller
 
         // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
         return $default;
-
-// Phương thức xử lý upload ảnh
-private function uploadImage(Request $request, $fieldName, $folder, $default = null)
-{
-    if ($request->hasFile($fieldName)) {
-        // Lưu file với tên duy nhất
-        $fileName = time() . '_' . $request->file($fieldName)->getClientOriginalName();
-        $filePath = $request->file($fieldName)->storeAs("public/{$folder}", $fileName);
-        
-        // Trả về đường dẫn tương đối (bỏ 'public/')
-        return str_replace('public/', '', $filePath);
-
     }
-
-    }
-
-    // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
-    return $default;
-}
-}
-
-
-    // Nếu không có ảnh mới, trả về giá trị mặc định (hoặc null)
-    return $default;
-}
 }

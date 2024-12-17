@@ -46,7 +46,7 @@
                         </span>
 
                         <p class="stext-115 cl6 size-213 p-t-18">
-                            Thành phố BMT
+                            300/6 Hà Huy Tập, Phường Tân Lợi, Thành phố BMT
                         </p>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         </span>
 
                         <p class="stext-115 cl1 size-213 p-t-18">
-                            +1 800 1236879
+                            +3375537556
                         </p>
                     </div>
                 </div>

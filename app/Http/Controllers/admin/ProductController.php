@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Category;
 use App\Models\Admin\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -15,204 +16,175 @@ class ProductController extends Controller
     {
         $this->product = $product;
     }
+
+    // Display latest 6 products
     public function view()
     {
         $products = Product::latest()->take(6)->get();
         return view('index', compact('products'));
     }
+
+    // Display all products
     public function index()
     {
-        $product = Product::all();
-        // $product = Product::orderBy('id', 'desc')->get(); // dòng này không được xóa 
-        return view('admin.products.index', compact('product'));
+        $products = Product::all();
+        return view('admin.products.index', compact('products'));
     }
+
+    // Show form to add a product
     public function add()
     {
-        $category = Category::get(['id', 'name']);
-        return view('admin.products.add', compact('category'));
+        // $categories = Category::select('id', 'name')->get();
+        // $categories = Category::select('id', 'name')->get();
+        $categories = Category::get(['id', 'name']);
+
+        return view('admin.products.add', compact('categories'));
     }
+
+    // Store a new product
     public function store(Request $request)
     {
-        // Validate dữ liệu
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
-            'category_id' => 'required|exists:categories,id',
+        try {
+            $validatedData = $this->validateRequest($request);
 
-            'content' => 'required|string',
-            'image' => 'required|array|min:1', // Ít nhất 1 hình ảnh
-            'image.*' => 'mimes:jpg,jpeg,png,gif|max:2048', // Kiểm tra định dạng và dung lượng ảnh
-        ], [
-            'name.required' => 'Tên sản phẩm không được để trống.',
-            'price.required' => 'Giá sản phẩm không được để trống.',
-            'price.numeric' => 'Giá sản phẩm phải là một số hợp lệ.',
-            'quantity.required' => 'Số lượng sản phẩm không được để trống.',
-            'category_id.required' => 'Danh mục không được để trống.',
-            'category_id.exists' => 'Danh mục không hợp lệ.',
-            'content.required' => 'Mô tả sản phẩm không được để trống.',
-            'image.required' => 'Vui lòng chọn ít nhất 1 hình ảnh.',
-            'image.*.mimes' => 'Chỉ cho phép tải lên các tệp hình ảnh JPG, JPEG, PNG, GIF.',
+            $product = new Product($validatedData);
+            $product->sale = $request->has('sale');
+            $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;
 
-        ]);
-
-        // Nếu validate thành công, thực hiện thêm sản phẩm vào cơ sở dữ liệu
-        $product = new Product();
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->quantity = $request->quantity;
-        $product->category_id = $request->category_id;
-
-        $product->content = $request->content;
-
-        // Lưu hình ảnh nếu có
-        if ($request->hasFile('image')) {
-
-        $product->sale = $request->has('sale'); // true nếu "Đang Sale" được chọn
-        $product->sale_percentage = $request->input('sale_percentage') ?? null;
-        if (!$request->has('sale')) {
-            $validatedData['sale_percentage'] = null;
-        }
-        // Lưu nhiều ảnh
-        if ($request->hasfile('image')) {
-            $images = [];
-            foreach ($request->file('image') as $file) {
-                $path = $file->store('products', 'public');
-                $images[] = $path;
+            if ($request->hasFile('image')) {
+                $product->image = json_encode($this->uploadImages($request->file('image')));
             }
-            $product->images = json_encode($images); // Lưu các đường dẫn hình ảnh dưới dạng JSON
+
+            $product->save();
+
+            return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm thành công.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Lỗi: ' . $e->getMessage());
         }
-
-        $product->save();
-
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được thêm thành công!');
     }
 
-    public function show($id) // Phương thức hiển thị chi tiết sản phẩm
+    // Show product details
+    public function show($id)
     {
+<<<<<<< HEAD
         // Tìm sản phẩm theo ID
         $product = Product::find($id);
         if (!$product) {
-            // Nếu sản phẩm không tồn tại, có thể trả về lỗi 404 hoặc redirect
+            // Nếu sản phẩm không tồn tại, có thể trả về lỗi 404 
             return abort(404, 'Sản phẩm không tồn tại');
         }
+=======
+        $product = Product::findOrFail($id);
+        $images = json_decode($product->image, true);
+>>>>>>> 5dc21345078e0df7dbd998f804a691c677ffa777
 
-        // Giải mã chuỗi JSON thành mảng
-        $images = json_decode($product->image);
-        // Lấy giỏ hàng từ session
         $cart = session()->get('cart', []);
-
-        // Tính số lượng sản phẩm trong giỏ
         $cartItemCount = array_sum(array_column($cart, 'quantity'));
+        $totalPrice = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
 
-        // Tính tổng giá tiền
-        $totalPrice = array_sum(array_map(function ($item) {
-            return $item['price'] * $item['quantity'];
-        }, $cart));
         $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)  // Không lấy chính sản phẩm hiện tại
-            ->limit(4)  // Hiển thị tối đa 4 sản phẩm liên quan
-            ->get();
-        // Trả về view với sản phẩm, ảnh, số lượng sản phẩm và tổng giá
+            ->where('id', '!=', $product->id)
+            ->limit(4)->get();
+
         return view('user.products.detail', compact('product', 'images', 'cartItemCount', 'totalPrice', 'relatedProducts'));
     }
 
+    // Show form to edit a product
     public function edit($id)
     {
-
-        $category = Category::get(['id', 'name']);
+        $categories = Category::select('id', 'name')->get();
         $product = Product::findOrFail($id);
-        return view('admin.products.edit', compact('category', 'product'));
+
+        return view('admin.products.edit', compact('categories', 'product'));
     }
 
+    // Update a product
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
+        try {
+            $validatedData = $this->validateRequest($request);
+
+            $product = Product::findOrFail($id);
+            $product->fill($validatedData);
+            $product->sale = $request->has('sale');
+            $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;
+
+            if ($request->hasFile('image')) {
+                $this->deleteOldImages($product->image);
+                $product->image = json_encode($this->uploadImages($request->file('image')));
+            }
+
+            $product->save();
+
+            return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Lỗi: ' . $e->getMessage());
+        }
+    }
+
+    // Delete a product
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $this->deleteOldImages($product->image);
+        $product->delete();
+
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được xóa thành công.');
+    }
+
+    // Display stock of products
+    public function stock()
+    {
+        $products = Product::select('id', 'name', 'quantity', 'price', 'image')->paginate(10);
+        return view('admin.products.stock', compact('products'));
+    }
+
+    // Search products
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('content', 'LIKE', "%{$query}%")
+            ->get();
+
+        return view('admin.products.search', compact('products', 'query'));
+    }
+
+    // Display all products (paginated)
+    public function showAll()
+    {
+        $products = Product::paginate(6);
+        return view('user.products.showall', compact('products'));
+    }
+
+    // Utility: Validate request data
+    private function validateRequest(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|string|max:100|unique:products,name,' . ($request->id ?? ''),
             'price' => 'required|numeric',
             'content' => 'required|string',
             'quantity' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
-            'sale_percentage' => 'nullable|numeric|min:0|max:100', // Kiểm tra tỷ lệ sale
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra định dạng ảnh
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sale_percentage' => 'nullable|integer|min:1|max:100',
         ]);
-
-        $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->content = $request->content;
-        $product->quantity = $request->quantity;
-        $product->category_id = $request->category_id;
-
-        // Kiểm tra và áp dụng tỷ lệ sale
-        if ($request->has('sale')) {
-            $product->sale = 1; // Đánh dấu sản phẩm đang sale
-            $product->sale_percentage = $request->sale_percentage;
-
-            // Tính giá sau giảm
-        } else {
-            $product->sale = 0; // Không áp dụng sale
-            $product->sale_percentage = null; // Xóa tỷ lệ sale
-        }
-
-        // Lưu nhiều ảnh (nếu có)
-        if ($request->hasfile('image')) {
-            $images = [];
-            foreach ($request->file('image') as $image) {
-                $path = $image->store('products', 'public');
-                $images[] = $path;
-            }
-            $product->image = json_encode($images);
-        }
-
-        $product->save();
-
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
-    public function destroy(string $id)
+    // Utility: Upload multiple images
+    private function uploadImages($images)
     {
-        $category = Product::destroy($id);
-        return redirect()->route('admin.products.index');
+        return array_map(fn($image) => $image->store('products', 'public'), $images);
     }
 
-    public function layouts(string $id)
+    // Utility: Delete old images
+    private function deleteOldImages($imagesJson)
     {
-        $product = Product::all();
-        return redirect()->route('admin.products.index');
-    }
-    public function stock()
-    {
-        $products = Product::select('image', 'id', 'name', 'quantity', 'price')->paginate(10); // Hiển thị tên, số lượng và giá
-        return view('admin.products.stock', compact('products'));
-    }
-    public function search(Request $request)
-    {
-        $query = $request->input('query'); // Lấy từ khóa tìm kiếm từ input của người dùng
-        $products = Product::where('name', 'LIKE', "%{$query}%") // Tìm sản phẩm có tên chứa từ khóa
-            ->orWhere('content', 'LIKE', "%{$query}%")
-            ->get();
-
-        return view('admin.products.search', compact('products', 'query')); // Trả về view với kết quả tìm kiếm
-    }
-    public function reduceProductQuantity($productId, $quantity)
-    {
-        $product = Product::find($productId);
-
-        if ($product) {
-            if ($product->quantity >= $quantity) {
-                $product->quantity -= $quantity; // Giảm số lượng sản phẩm
-                $product->save(); // Lưu lại thay đổi
-            } else {
-                // Nếu số lượng sản phẩm không đủ, có thể thông báo lỗi hoặc xử lý khác
-                throw new \Exception("Không đủ sản phẩm trong kho.");
+        $images = json_decode($imagesJson, true);
+        if ($images) {
+            foreach ($images as $image) {
+                Storage::disk('public')->delete($image);
             }
         }
-    }
-    public function showAll(Request $request)
-    {
-
-        $products = Product::paginate(6); // Hiển thị 12 sản phẩm mỗi trang
-        return view('user.products.showall', compact('products'));
     }
 }
