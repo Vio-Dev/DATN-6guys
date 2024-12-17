@@ -82,13 +82,11 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Hình Ảnh Bìa</label>
                                             <div class="col-sm-10">
-                                                <input class="form-control " type="file" name="cover_image"
-                                                    accept="image/*" onchange="previewCoverImage()">
+                                                <input class="form-control" type="file" name="cover_image" accept="image/*" onchange="previewCoverImage()">
                                                 @error('cover_image')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
-
-
+                                        
                                                 @if (old('featured_image') || (isset($post) && $post->featured_image))
                                                     <div class="mb-2">
                                                         <img src="{{ isset($post) && $post->featured_image ? Storage::url($post->featured_image) : old('featured_image') }}"
@@ -97,11 +95,9 @@
                                                             class="rounded">
                                                     </div>
                                                 @endif
-                                                <input type="file" class="form-control" name="featured_image"
-                                                    accept="image/*" onchange="previewCoverImage()">
                                             </div>
                                         </div>
-
+                                        
                                         <!-- Xem Trước Ảnh Bìa -->
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-0">Xem Trước Ảnh Bìa</label>
@@ -109,6 +105,7 @@
                                                 <!-- Xem trước hình ảnh sẽ hiển thị ở đây -->
                                             </div>
                                         </div>
+                                        
 
                                         <!-- Hình Ảnh Trong Bài Viết -->
                                         <div class="mb-4 row align-items-center">
@@ -183,27 +180,26 @@
         }
 
         // Xem trước các ảnh trong bài viết
-        function previewPostImages() {
-            const files = document.querySelector('input[name="images[]"]').files;
-            const preview = document.getElementById('postImagesPreview');
-            preview.innerHTML = ''; // Clear the preview area
+        function previewCoverImage() {
+        const input = document.querySelector('input[name="cover_image"]');
+        const preview = document.getElementById('coverImagePreview');
 
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-
-                reader.onloadend = function() {
-                    const img = document.createElement('img');
-                    img.src = reader.result;
-                    img.alt = "Preview Post Image";
-                    img.width = 100;
-                    preview.appendChild(img);
-                };
-
-                if (file) {
-                    reader.readAsDataURL(file);
-                }
-            }
+        if (!input.files || input.files.length === 0) {
+            preview.innerHTML = ''; // Xóa nội dung cũ nếu không có file
+            return;
         }
+
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Preview Image" 
+                     style="width: 150px; height: auto; object-fit: cover;" class="rounded">
+            `;
+        };
+
+        reader.readAsDataURL(file);
+    }
     </script>
 @endsection

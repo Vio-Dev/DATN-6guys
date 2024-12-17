@@ -132,14 +132,16 @@ Route::post('/cart/add/{itemId}', [CartController::class, 'addToCart'])->name('c
 
 
 Route::get('/oders/list', [OrderController::class, 'list'])->name('admin.oders.list');
-Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+Route::put('/admin/orders/{id}/updateStatus', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders');
 Route::get('/user/orders/{order}/return', [OrderController::class, 'showReturnForm'])->name('user.orders.return');
 Route::post('/user/orders/{order}/return', [OrderController::class, 'processReturn'])->name('user.orders.processReturn');
 Route::get('/user/orders/{id}', [OrderController::class, 'show'])->name('user.orders.show');
 Route::get('/user/orders', [OrderController::class, 'index'])->name('user.orders.index');
-Route::post('/user/orders/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('user.orders.cancel');
+Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+
 // Route::get('/', function () {
 //     return view('index');
 // });

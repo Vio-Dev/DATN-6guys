@@ -6,7 +6,7 @@
     @endif
     
     <div class="container my-5">
-        <h2 class="text-center mb-4 text-uppercase fw-bold text-primary">Thông tin thanh toán</h2>
+        <h2 class="text-center mb-4 text-uppercase fw-bold text-dark">Thông tin thanh toán</h2>
 
         <!-- Form Thanh toán -->
         <form action="{{ route('user.checkout.process') }}" method="POST">
@@ -15,7 +15,7 @@
                 <!-- Thông tin khách hàng -->
                 <div class="col-md-6 mb-4">
                     <div class="card border-0 shadow p-4">
-                        <h4 class="mb-3 text-secondary">Thông tin khách hàng</h4>
+                        <h4 class="mb-3 text-dark">Thông tin khách hàng</h4>
                         <div class="mb-3">
                             <label for="name" class="form-label">Họ và tên</label>
                             <input type="text" name="name" id="name" class="form-control border-secondary"
@@ -42,7 +42,7 @@
                 <!-- Phương thức thanh toán -->
                 <div class="col-md-6 mb-4">
                     <div class="card border-0 shadow p-4">
-                        <h4 class="mb-3 text-secondary">Phương thức thanh toán</h4>
+                        <h4 class="mb-3 text-dark">Phương thức thanh toán</h4>
                         <div>
                             <div class="form-check mb-3">
                                 <input type="radio" name="payment_method" id="cod" value="cod"
@@ -72,7 +72,7 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card border-0 shadow p-4">
-                        <h4 class="mb-3 text-secondary">Sản phẩm của bạn</h4>
+                        <h4 class="mb-3 text-dark">Sản phẩm của bạn</h4>
                         <table class="table table-striped table-hover align-middle">
                             <thead>
                                 <tr class="text-secondary">
@@ -117,17 +117,17 @@
                             </form>
                         </div> --}}
                         <div class="mt-3">
-                            <p class="mb-1 text-secondary"><strong>Tổng giá trị giỏ hàng:</strong>
+                            <p class="mb-1 text-dark"><strong>Tổng giá trị giỏ hàng:</strong>
                                 {{ number_format($totalPrice, 0, ',', '.') }} VND</p>
                                 @if (session('discounted_price'))
-                                <p class="mb-1 text-secondary"><strong>Giảm giá:</strong>
+                                <p class="mb-1 text-dark"><strong>Giảm giá:</strong>
                                     {{ number_format($totalPrice - session('discounted_price'), 0, ',', '.') }} VND
                                 </p>
-                                <p class="mb-0 text-secondary"><strong>Tổng cộng:</strong>
+                                <p class="mb-0 text-dark"><strong>Tổng cộng:</strong>
                                     {{ number_format(session('discounted_price'), 0, ',', '.') }} VND
                                 </p>
                             @else
-                                <p class="mb-0 text-secondary"><strong>Tổng cộng:</strong>
+                                <p class="mb-0 text-dark"><strong>Tổng cộng:</strong>
                                     {{ number_format($totalPrice, 0, ',', '.') }} VND
                                 </p>
                             @endif
