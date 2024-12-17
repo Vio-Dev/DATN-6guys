@@ -34,7 +34,10 @@ class ProductController extends Controller
     // Show form to add a product
     public function add()
     {
-        $categories = Category::select('id', 'name')->get();
+        // $categories = Category::select('id', 'name')->get();
+        // $categories = Category::select('id', 'name')->get();
+        $categories = Category::get(['id', 'name']);
+
         return view('admin.products.add', compact('categories'));
     }
 
