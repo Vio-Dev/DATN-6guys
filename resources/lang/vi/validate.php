@@ -11,7 +11,7 @@ return [
     | Bạn có thể thay đổi chúng để phù hợp với ứng dụng của bạn.
     |
     */
-
+    
     'accepted' => 'The :attribute phải được chấp nhận.',
     'active_url' => ':attribute không phải là một URL hợp lệ.',
     'after' => ':attribute phải là một ngày sau :date.',
