@@ -48,7 +48,7 @@ class UsersController extends Controller
         User::create($validatedData);
 
         return redirect()->route('admin.user.index')
-            ->with('success', 'User has been created successfully!');
+            ->with('success', 'Thêm người dùng thành công!');
     }
 
     public function destroy($id)
@@ -57,7 +57,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('admin.user.index')
-            ->with('success', 'User has been deleted successfully!');
+            ->with('success', 'Xóa người dùng thành công');
     }
 
     public function edit($id)
@@ -103,6 +103,7 @@ class UsersController extends Controller
         $user->role = $request->role;
         $user->save();
 
-        return redirect()->route('admin.user.index')->with('success', 'Cập nhật người dùng thành công!');
+        session()->flash('success', 'Cập nhật thành công');
+        return redirect()->route('admin.user.index');
     }
 }
