@@ -177,7 +177,7 @@
                                         <div class="col-sm-10">
                                             <select class="js-example-basic-single w-100" name="category_id" required>
                                                 <option disabled>Danh Mục</option>
-                                                @foreach ($category as $item)
+                                                @foreach ($categories as $item)
                                                     <option value="{{ $item->id }}"
                                                         {{ $item->id == $product->category_id ? 'selected' : '' }}>
                                                         {{ $item->name }}

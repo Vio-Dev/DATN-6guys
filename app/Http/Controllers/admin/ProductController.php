@@ -20,7 +20,7 @@ class ProductController extends Controller
     // Display latest 6 products
     public function view()
     {
-        $products = Product::latest()->take(6)->get();
+        $products = Product::latest()->take(6)->get();  
         return view('index', compact('products'));
     }
 
@@ -66,17 +66,8 @@ class ProductController extends Controller
     // Show product details
     public function show($id)
     {
-<<<<<<< HEAD
-        // Tìm sản phẩm theo ID
-        $product = Product::find($id);
-        if (!$product) {
-            // Nếu sản phẩm không tồn tại, có thể trả về lỗi 404 
-            return abort(404, 'Sản phẩm không tồn tại');
-        }
-=======
         $product = Product::findOrFail($id);
         $images = json_decode($product->image, true);
->>>>>>> 5dc21345078e0df7dbd998f804a691c677ffa777
 
         $cart = session()->get('cart', []);
         $cartItemCount = array_sum(array_column($cart, 'quantity'));
@@ -103,8 +94,7 @@ class ProductController extends Controller
     {
         try {
             $validatedData = $this->validateRequest($request);
-
-            $product = Product::findOrFail($id);
+$product = Product::findOrFail($id);
             $product->fill($validatedData);
             $product->sale = $request->has('sale');
             $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;

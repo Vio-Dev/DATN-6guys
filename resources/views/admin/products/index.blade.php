@@ -24,7 +24,7 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($product as $item)
+                                            @foreach ($products as $item)
                                                 <tr>
                                                     
                                                     <td>
