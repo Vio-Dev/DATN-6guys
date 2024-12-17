@@ -140,7 +140,7 @@ class ProductController extends Controller
         // Tìm sản phẩm theo ID
         $product = Product::find($id);
         if (!$product) {
-            // Nếu sản phẩm không tồn tại, có thể trả về lỗi 404 hoặc redirect
+            // Nếu sản phẩm không tồn tại, có thể trả về lỗi 404 
             return abort(404, 'Sản phẩm không tồn tại');
         }
 
