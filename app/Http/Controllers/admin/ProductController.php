@@ -20,7 +20,7 @@ class ProductController extends Controller
     // Display latest 6 products
     public function view()
     {
-        $products = Product::latest()->take(6)->get();
+        $products = Product::latest()->take(6)->get();  
         return view('index', compact('products'));
     }
 
@@ -94,8 +94,7 @@ class ProductController extends Controller
     {
         try {
             $validatedData = $this->validateRequest($request);
-
-            $product = Product::findOrFail($id);
+$product = Product::findOrFail($id);
             $product->fill($validatedData);
             $product->sale = $request->has('sale');
             $product->sale_percentage = $request->has('sale') ? $validatedData['sale_percentage'] : null;
